@@ -55,7 +55,7 @@
     <Compile Include="Enums\TextureType.cs" />
     <Compile Include="Enums\WeatherType.cs" />
     <Compile Include="Forecast.cs" />
-    <Compile Include="Helpers\TextureDrawingHelper.cs" />
+    <Compile Include="Helpers\TextureHelper.cs" />
     <Compile Include="Models\Weather.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
