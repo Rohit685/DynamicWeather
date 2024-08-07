@@ -1,6 +1,6 @@
 ﻿namespace DynamicWeather.Enums
 {
-    public enum WeatherType
+    public enum WeatherTypesEnum
     {
         Blizzard = 669657108,
         Clear = 916995460,

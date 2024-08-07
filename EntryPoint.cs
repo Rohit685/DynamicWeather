@@ -16,8 +16,8 @@ namespace DynamicWeather
         internal static bool drawing = false;
         internal static void Main()
         {
-            TextureHelper.LoadAllTextures();
             Weathers.DeserializeAndValidateXML();
+            TextureHelper.LoadAllTextures();
             while (true)
             {
                 GameFiber.Yield();

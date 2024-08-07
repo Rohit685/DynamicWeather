@@ -6,14 +6,13 @@ using DynamicWeather.Enums;
 using DynamicWeather.Helpers;
 using DynamicWeather.IO;
 using Rage;
-using WeatherType = DynamicWeather.Enums.WeatherType;
 
 namespace DynamicWeather.Models
 {
     public class Weather
     {
         [XmlIgnore]
-        public WeatherType WeatherType { get; set; }
+        public WeatherTypesEnum WeatherTypesEnum { get; set; }
         
         [XmlAttribute]
         public string WeatherName { get; set; }
@@ -26,14 +25,17 @@ namespace DynamicWeather.Models
         
         [XmlAttribute]
         public int MaxTemperature { get; set; }
+        
+        internal Texture Texture { get; set; }
 
-        internal Weather(WeatherType weatherType, string weatherName, int temperature, int minTemperature, int maxTemperature)
+        internal Weather(WeatherTypesEnum weatherTypesEnum, string weatherName, int temperature, int minTemperature, int maxTemperature)
         {
-            WeatherType = weatherType;
+            WeatherTypesEnum = weatherTypesEnum;
             WeatherName = weatherName.ToUpper();
             Temperature = temperature;
             MinTemperature = minTemperature;
             MaxTemperature = maxTemperature;
+            Texture = null;
         }
         public Weather() { }
     }
@@ -42,7 +44,7 @@ namespace DynamicWeather.Models
 
     public class Weathers
     {
-        internal static Dictionary<WeatherType, Weather> WeatherData = new Dictionary<WeatherType, Weather>();
+        internal static Dictionary<WeatherTypesEnum, Weather> WeatherData = new Dictionary<WeatherTypesEnum, Weather>();
         
         [XmlElement("Weather")]
         public Weather[] AllWeathers;
@@ -57,7 +59,7 @@ namespace DynamicWeather.Models
             Random random = new Random(DateTime.Today.Millisecond);
             foreach (Weather weather in data.AllWeathers)
             {
-                if (!Enum.TryParse(weather.WeatherName, true, out WeatherType type))
+                if (!Enum.TryParse(weather.WeatherName, true, out WeatherTypesEnum type))
                 {
                     throw new InvalidDataException($"Invalid weather name found in xml: {weather.WeatherName}");
                 }
@@ -70,7 +72,7 @@ namespace DynamicWeather.Models
                     weather.MaxTemperature);
                 WeatherData.Add(type, w);
             }
-            if (WeatherData.Count != Enum.GetValues(typeof(WeatherType)).Length)
+            if (WeatherData.Count != Enum.GetValues(typeof(WeatherTypesEnum)).Length)
             {
                 throw new InvalidDataException("Not all weathers present in the xml");
             }

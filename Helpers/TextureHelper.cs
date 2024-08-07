@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Drawing;
 using System.IO;
+using DynamicWeather.Enums;
+using DynamicWeather.Models;
+
 
 namespace DynamicWeather.Helpers
 {
     internal class TextureHelper
     {
-        internal static Dictionary<string, Texture> loadedTextures = new Dictionary<string, Texture>();
         internal static void DrawTexture(Rage.Graphics g, List<Texture> textures)
         {
             SizeF size = Game.Resolution;
@@ -48,19 +50,15 @@ namespace DynamicWeather.Helpers
             foreach (var texture in Directory.GetFiles(@"Plugins/DynamicWeather/Textures"))
             {
                 String filename = Path.GetFileNameWithoutExtension(texture).ToUpper();
-                if (!Enum.TryParse(filename, true, out WeatherType type))
+                if (!Enum.TryParse(filename, true, out WeatherTypesEnum type))
                 {
                     throw new InvalidDataException($"Invalid texture name found in directory: {filename}");
                 }
-                if (loadedTextures.ContainsKey(filename))
+                if (Weathers.WeatherData[type].Texture != null)
                 {
                     throw new InvalidDataException($"Duplicate texture types found in directory: {filename}");
                 }
-                loadedTextures.Add(filename,Game.CreateTextureFromFile(texture));
-            }
-            if (loadedTextures.Count != Enum.GetValues(typeof(WeatherType)).Length)
-            {
-                throw new InvalidDataException("Not all weather textures present in the directory");
+                Weathers.WeatherData[type].Texture = Game.CreateTextureFromFile(texture);
             }
         }
     }

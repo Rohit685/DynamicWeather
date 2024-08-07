@@ -54,7 +54,7 @@
   <ItemGroup>
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Enums\TextureType.cs" />
-    <Compile Include="Enums\WeatherType.cs" />
+    <Compile Include="Enums\WeatherTypesEnum.cs" />
     <Compile Include="Helpers\TextureHelper.cs" />
     <Compile Include="IO\XMLParser.cs" />
     <Compile Include="Models\Forecast.cs" />

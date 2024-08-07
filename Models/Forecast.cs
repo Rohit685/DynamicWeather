@@ -54,7 +54,7 @@ namespace DynamicWeather
                 var weather = WeatherList[index];
                 Text weatherText = new Text(weather.Temperature.ToString(), 20, Color.White);
                 textList.Add(weatherText);
-                texturesList.Add(TextureHelper.loadedTextures[weather.WeatherName]);
+                texturesList.Add(weather.Texture);
             }
         }
     }
