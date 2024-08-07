@@ -42,7 +42,8 @@ internal class XMLParser<E>
         }
         catch (Exception e)
         {
-            //TODO
+            Game.LogTrivial($"Error deserializing XML File: {FilePath}");
+            Game.LogTrivial(e.ToString());
         }
         return xmlObject;
     }

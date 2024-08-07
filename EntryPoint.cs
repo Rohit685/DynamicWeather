@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using DynamicWeather.Helpers;
+using DynamicWeather.Models;
 using Rage;
 using Rage.Exceptions;
 using Rage.Native;
@@ -16,6 +17,7 @@ namespace DynamicWeather
         internal static void Main()
         {
             TextureHelper.LoadAllTextures();
+            Weathers.DeserializeWeathers();
             while (true)
             {
                 GameFiber.Yield();

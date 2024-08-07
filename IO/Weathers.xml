@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Weathers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Weather WeatherName="Clear" MinTemperature="59" MaxTemperature="77" />
+    <Weather WeatherName="Rain" MinTemperature="50" MaxTemperature="68" />
+    <Weather WeatherName="Snow" MinTemperature="23" MaxTemperature="41" />
+    <Weather WeatherName="Blizzard" MinTemperature="14" MaxTemperature="32" />
+    <Weather WeatherName="Foggy" MinTemperature="46" MaxTemperature="59" />
+    <Weather WeatherName="Overcast" MinTemperature="54" MaxTemperature="64" />
+    <Weather WeatherName="ExtraSunny" MinTemperature="68" MaxTemperature="86" />
+    <Weather WeatherName="Thunder" MinTemperature="64" MaxTemperature="82" />
+    <Weather WeatherName="Clouds" MinTemperature="57" MaxTemperature="72" />
+    <Weather WeatherName="Xmas" MinTemperature="23" MaxTemperature="36" />
+    <Weather WeatherName="Smog" MinTemperature="50" MaxTemperature="61" />
+    <Weather WeatherName="Snowlight" MinTemperature="28" MaxTemperature="37" />
+    <Weather WeatherName="Halloween" MinTemperature="41" MaxTemperature="50" />
+    <Weather WeatherName="Neutral" MinTemperature="50" MaxTemperature="59" />
+    <Weather WeatherName="Clearing" MinTemperature="54" MaxTemperature="68" />
+</Weathers>

@@ -4,6 +4,8 @@ using System.IO;
 using System.Xml.Serialization;
 using DynamicWeather.Enums;
 using DynamicWeather.IO;
+using Rage;
+using WeatherType = DynamicWeather.Enums.WeatherType;
 
 namespace DynamicWeather.Models
 {
@@ -40,12 +42,13 @@ namespace DynamicWeather.Models
         public Weather() { }
     }
 
-    [XmlRoot("Weathers", IsNullable = false)]
+    [XmlRoot("Weathers")]
 
     public class Weathers
     {
-        internal static Dictionary<WeatherType,Weather> WeatherData { get; set; }
-
+        internal static Dictionary<WeatherType, Weather> WeatherData = new Dictionary<WeatherType, Weather>();
+        
+        [XmlElement("Weather")]
         public Weather[] AllWeathers;
         
         internal Weathers() { }
@@ -54,6 +57,7 @@ namespace DynamicWeather.Models
         {
             XMLParser<Weathers> xmlParser = new(@"Plugins/DynamicWeather/Weathers.xml");
             Weathers data = xmlParser.DeserializeXML();
+            Game.LogTrivial($"Number of weathers: {data.AllWeathers.Length}");
             Random random = new Random(DateTime.Today.Millisecond);
             foreach (Weather weather in data.AllWeathers)
             {
@@ -70,7 +74,11 @@ namespace DynamicWeather.Models
                     weather.MaxTemperature);
                 WeatherData.Add(type, w);
             }
-            
+            if (WeatherData.Count != 15)
+            {
+                throw new InvalidDataException("Not all weathers present in the xml");
+            }
+            Game.LogTrivial("Weathers deserialized successfully.");
         }
 
     }

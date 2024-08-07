@@ -65,6 +65,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="IO\Weathers.xml" />
     <Content Include="Textures\Clearing.png" />
     <Content Include="Textures\Clouds.png" />
     <Content Include="Textures\Blizzard.png" />
