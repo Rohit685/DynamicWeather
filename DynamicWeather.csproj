@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="RAGENativeUI">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\RAGENativeUI.dll</HintPath>
     </Reference>
@@ -54,9 +55,10 @@
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Enums\TextureType.cs" />
     <Compile Include="Enums\WeatherType.cs" />
-    <Compile Include="Forecast.cs" />
     <Compile Include="Helpers\TextureHelper.cs" />
-    <Compile Include="Models\Weather.cs" />
+    <Compile Include="IO\XMLParser.cs" />
+    <Compile Include="Models\Forecast.cs" />
+    <Compile Include="Models\WeatherModels\Weather.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Textures\Clearing.png" />
-    <Content Include="Textures\clouds.png" />
+    <Content Include="Textures\Clouds.png" />
     <Content Include="Textures\Blizzard.png" />
     <Content Include="Textures\Halloween.png" />
     <Content Include="Textures\Foggy.png" />
