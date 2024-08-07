@@ -53,7 +53,7 @@ namespace DynamicWeather.Models
         
         internal Weathers() { }
         
-        internal static void DeserializeWeathers()
+        internal static void DeserializeAndValidateXML()
         {
             XMLParser<Weathers> xmlParser = new(@"Plugins/DynamicWeather/Weathers.xml");
             Weathers data = xmlParser.DeserializeXML();
@@ -74,7 +74,7 @@ namespace DynamicWeather.Models
                     weather.MaxTemperature);
                 WeatherData.Add(type, w);
             }
-            if (WeatherData.Count != 15)
+            if (WeatherData.Count != Enum.GetValues(typeof(WeatherType)).Length)
             {
                 throw new InvalidDataException("Not all weathers present in the xml");
             }
