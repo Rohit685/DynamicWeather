@@ -1,9 +1,11 @@
 ﻿using DynamicWeather.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DynamicWeather.Helpers;
 using Rage;
 using Rage.Native;
 
@@ -41,6 +43,19 @@ namespace DynamicWeather
         internal static void CreateForecast(int interval)
         {
             
+        }
+
+        internal void DrawForecast(Rage.Graphics g)
+        {
+            var textList = new List<Text>();
+            var texturesList = new List<Texture>();
+            for (var index = 0; index < WeatherList.Count; index++)
+            {
+                var weather = WeatherList[index];
+                Text weatherText = new Text(weather.Temperature.ToString(), 20, Color.White);
+                textList.Add(weatherText);
+                texturesList.Add(TextureHelper.loadedTextures[weather.WeatherName]);
+            }
         }
     }
 }

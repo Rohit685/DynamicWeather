@@ -11,19 +11,19 @@ namespace DynamicWeather.Enums
     {
         internal static Dictionary<WeatherType, string> WeatherTypes = new Dictionary<WeatherType, string>()
         {
-            { WeatherType.Blizzard, "Blizzard" },
-            { WeatherType.Clear | WeatherType.Neutral | WeatherType.ExtraSunny, "ExtraSunny" },
-            { WeatherType.Clearing, "Clearing" },
-            { WeatherType.Clouds, "Clouds" },
-            { WeatherType.Foggy, "Foggy" },
-            { WeatherType.Halloween, "Halloween" },
-            { WeatherType.Overcast, "Overcast" },
-            { WeatherType.Rain, "Rain" },
-            { WeatherType.Smog, "Smog" },
-            { WeatherType.Snow, "Snow" },
-            { WeatherType.Snowlight, "Snowlight" },
-            { WeatherType.Thunder, "Thunder" },
-            { WeatherType.Xmas, "Xmas" }
+            { WeatherType.Blizzard, "BLIZZARD" },
+            { WeatherType.Clear | WeatherType.Neutral | WeatherType.ExtraSunny, "EXTRASUNNY" },
+            { WeatherType.Clearing, "CLEARING" },
+            { WeatherType.Clouds, "CLOUDS" },
+            { WeatherType.Foggy, "FOGGY" },
+            { WeatherType.Halloween, "HALLOWEEN" },
+            { WeatherType.Overcast, "OVERCAST" },
+            { WeatherType.Rain, "RAIN" },
+            { WeatherType.Smog, "SMOG" },
+            { WeatherType.Snow, "SNOW" },
+            { WeatherType.Snowlight, "SNOWLIGHT" },
+            { WeatherType.Thunder, "THUNDER" },
+            { WeatherType.Xmas, "XMAS" }
         };
         
         internal static string GetTextureName(WeatherType weatherType)
@@ -32,7 +32,7 @@ namespace DynamicWeather.Enums
             {
                 return WeatherTypes[weatherType];
             }
-            return "ExtraSunny";
+            return "EXTRASUNNY";
         }
     }
 }

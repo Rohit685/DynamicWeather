@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using DynamicWeather.Enums;
+using DynamicWeather.Helpers;
 using DynamicWeather.IO;
 using Rage;
 using WeatherType = DynamicWeather.Enums.WeatherType;
@@ -25,10 +26,6 @@ namespace DynamicWeather.Models
         
         [XmlAttribute]
         public int MaxTemperature { get; set; }
-        
-        [XmlIgnore]
-        public string WeatherTextureName { get; set; }
-        
 
         internal Weather(WeatherType weatherType, string weatherName, int temperature, int minTemperature, int maxTemperature)
         {
@@ -37,7 +34,6 @@ namespace DynamicWeather.Models
             Temperature = temperature;
             MinTemperature = minTemperature;
             MaxTemperature = maxTemperature;
-            WeatherTextureName = TextureType.GetTextureName(weatherType);
         }
         public Weather() { }
     }

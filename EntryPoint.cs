@@ -47,7 +47,7 @@ namespace DynamicWeather
         
         private static void FrameRender(object sender, GraphicsEventArgs e)
         {
-           TextureHelper.Draw(e.Graphics, TextureHelper.textures);
+            
         }
     }
 }   
