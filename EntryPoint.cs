@@ -17,7 +17,7 @@ namespace DynamicWeather
         internal static void Main()
         {
             TextureHelper.LoadAllTextures();
-            Weathers.DeserializeWeathers();
+            Weathers.DeserializeAndValidateXML();
             while (true)
             {
                 GameFiber.Yield();
