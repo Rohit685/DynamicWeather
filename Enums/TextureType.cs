@@ -9,7 +9,7 @@ namespace DynamicWeather.Enums
 {
     internal static class TextureType
     {
-        internal static Dictionary<WeatherType, string> WeatherTypes = new Dictionary<WeatherType, string>()
+        internal static Dictionary<WeatherType, string> EnumToTexture = new Dictionary<WeatherType, string>()
         {
             { WeatherType.Blizzard, "BLIZZARD" },
             { WeatherType.Clear | WeatherType.Neutral | WeatherType.ExtraSunny, "EXTRASUNNY" },
@@ -28,9 +28,9 @@ namespace DynamicWeather.Enums
         
         internal static string GetTextureName(WeatherType weatherType)
         {
-            if (WeatherTypes.ContainsKey(weatherType))
+            if (EnumToTexture.ContainsKey(weatherType))
             {
-                return WeatherTypes[weatherType];
+                return EnumToTexture[weatherType];
             }
             return "EXTRASUNNY";
         }
