@@ -52,11 +52,11 @@ namespace DynamicWeather.Helpers
                 String filename = Path.GetFileNameWithoutExtension(texture).ToUpper();
                 if (!Enum.TryParse(filename, true, out WeatherTypesEnum type))
                 {
-                    throw new InvalidDataException($"Invalid texture name found in directory: {filename}");
+                    Game.LogTrivial($"Invalid texture name found in directory: {filename}");
                 }
                 if (Weathers.WeatherData[type].Texture != null)
                 {
-                    throw new InvalidDataException($"Duplicate texture types found in directory: {filename}");
+                    Game.LogTrivial($"Duplicate texture types found in directory: {filename}");
                 }
                 Weathers.WeatherData[type].Texture = Game.CreateTextureFromFile(texture);
             }

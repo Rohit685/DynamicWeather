@@ -21,7 +21,7 @@ namespace DynamicWeather
         internal Weather NextWeather => WeatherList[currWeatherIndex + 1] != null ? WeatherList[currWeatherIndex + 1] : WeatherList[0];
         private List<Text> TextList;
         private List<Texture> TexturesList;
-        private int timeInterval;
+        private double timeInterval;
 
         private static WeatherTypesEnum[] stages = {
             WeatherTypesEnum.ExtraSunny,
@@ -49,7 +49,7 @@ namespace DynamicWeather
             for (var index = 0; index < WeatherList.Count; index++)
             {
                 var weather = WeatherList[index];
-                Text weatherText = new Text(weather.Temperature.ToString(), 20, Color.White);
+                Text weatherText = new Text(weather.Temperature.ToString() + "°", 40, Color.White);
                 TextList.Add(weatherText);
                 TexturesList.Add(weather.Texture);
             }
@@ -57,6 +57,23 @@ namespace DynamicWeather
 
         internal void Process()
         {
+            DateTime lastTransitionTime = NativeFunction.Natives.GET_GAME_TIME<DateTime>();
+
+            while (true)
+            {
+                GameFiber.Yield(); 
+
+                TimeSpan elapsedTime = NativeFunction.Natives.GET_GAME_TIME<DateTime>() - lastTransitionTime;
+
+                if (elapsedTime.TotalHours >= timeInterval - 0.5)
+                {
+                    TransitionWeather(); 
+                    lastTransitionTime = NativeFunction.Natives.GET_GAME_TIME<DateTime>(); 
+                }
+
+                GameFiber.Sleep(5000);
+            }
+
         }
 
         internal void TransitionWeather()
