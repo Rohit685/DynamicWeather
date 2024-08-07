@@ -14,10 +14,12 @@ namespace DynamicWeather
     internal static class EntryPoint
     {
         internal static bool drawing = false;
+        internal static Forecast currentForecast = null;
         internal static void Main()
         {
             Weathers.DeserializeAndValidateXML();
             TextureHelper.LoadAllTextures();
+            currentForecast = new Forecast(1);
             while (true)
             {
                 GameFiber.Yield();
@@ -47,7 +49,7 @@ namespace DynamicWeather
         
         private static void FrameRender(object sender, GraphicsEventArgs e)
         {
-            
+            currentForecast.DrawForecast(e.Graphics);
         }
     }
 }   
