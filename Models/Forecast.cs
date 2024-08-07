@@ -49,7 +49,7 @@ namespace DynamicWeather
             for (var index = 0; index < WeatherList.Count; index++)
             {
                 var weather = WeatherList[index];
-                Text weatherText = new Text(weather.Temperature.ToString(), 20, Color.White);
+                Text weatherText = new Text(weather.Temperature.ToString(), 40, Color.White);
                 TextList.Add(weatherText);
                 TexturesList.Add(weather.Texture);
             }
