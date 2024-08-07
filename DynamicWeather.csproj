@@ -65,21 +65,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="IO\Weathers.xml" />
-    <Content Include="Textures\Clearing.png" />
-    <Content Include="Textures\Clouds.png" />
-    <Content Include="Textures\Blizzard.png" />
-    <Content Include="Textures\Halloween.png" />
-    <Content Include="Textures\Foggy.png" />
-    <Content Include="Textures\Snow.png" />
-    <Content Include="Textures\Snowlight.png" />
-    <Content Include="Textures\XMAS.png" />
-    <Content Include="Textures\Smog.png" />
-    <Content Include="Textures\Overcast.png" />
-    <Content Include="Textures\SevereWeather.png" />
-    <Content Include="Textures\Rain.png" />
-    <Content Include="Textures\Thunder.png" />
-    <Content Include="Textures\ExtraSunny.png" />
+    <Content Include="DynamicWeather\Textures\Blizzard.png" />
+    <Content Include="DynamicWeather\Textures\Clearing.png" />
+    <Content Include="DynamicWeather\Textures\Clouds.png" />
+    <Content Include="DynamicWeather\Textures\ExtraSunny.png" />
+    <Content Include="DynamicWeather\Textures\Foggy.png" />
+    <Content Include="DynamicWeather\Textures\Halloween.png" />
+    <Content Include="DynamicWeather\Textures\Overcast.png" />
+    <Content Include="DynamicWeather\Textures\Rain.png" />
+    <Content Include="DynamicWeather\Textures\SevereWeather.png" />
+    <Content Include="DynamicWeather\Textures\Smog.png" />
+    <Content Include="DynamicWeather\Textures\Snow.png" />
+    <Content Include="DynamicWeather\Textures\Snowlight.png" />
+    <Content Include="DynamicWeather\Textures\Thunder.png" />
+    <Content Include="DynamicWeather\Textures\XMAS.png" />
+    <Content Include="DynamicWeather\Weathers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -38,7 +38,7 @@ namespace DynamicWeather.Helpers
         
         internal static void LoadAllTextures()
         {
-            foreach (var texture in Directory.GetFiles(@"Plugins/Textures"))
+            foreach (var texture in Directory.GetFiles(@"Plugins/DynamicWeather/Textures"))
             {
                 textures.Add(Game.CreateTextureFromFile(texture));
             }
