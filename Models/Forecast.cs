@@ -117,8 +117,12 @@ namespace DynamicWeather
 
         internal void DrawForecast(Rage.Graphics g)
         {
+            //Forecast
             TextureHelper.DrawTexture(g, TexturesList);
             TextureHelper.DrawText(g, TextList);
+            //DateTime
+            TextureHelper.DrawText(g, new Text(World.DateTime.ToString("f"), 40, Color.White), 1, 1);
+            //change pos!!
         }
     }
 }

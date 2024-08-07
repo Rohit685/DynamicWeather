@@ -38,6 +38,52 @@ namespace DynamicWeather.Models
             MaxTemperature = maxTemperature;
             Texture = null;
         }
+
+        internal int GetTemperature(Weather weather)
+        {
+            Random random = new Random();
+            var timeOfDay = World.DateTime.TimeOfDay;
+            int hour = timeOfDay.Hours;
+
+            int minTemperature;
+            int maxTemperature;
+
+            switch (hour)
+            {
+                case int h when (h >= 0 && h < 6):
+                    minTemperature = MinTemperature;
+                    maxTemperature = MinTemperature + 5;
+                    break;
+
+                case int h when (h >= 6 && h < 12):
+                    minTemperature = MinTemperature + 5;
+                    maxTemperature = (MinTemperature + MaxTemperature) / 2;
+                    break;
+
+                case int h when (h >= 12 && h < 16):
+                    minTemperature = (MinTemperature + MaxTemperature) / 2;
+                    maxTemperature = MaxTemperature;
+                    break;
+
+                case int h when (h >= 16 && h < 20):
+                    minTemperature = (MinTemperature + MaxTemperature) / 2;
+                    maxTemperature = MaxTemperature - 5;
+                    break;
+
+                case int h when (h >= 20 && h < 24):
+                    minTemperature = MinTemperature + 5;
+                    maxTemperature = (MinTemperature + MaxTemperature) / 2;
+                    break;
+
+                default:
+                    minTemperature = MinTemperature;
+                    maxTemperature = MaxTemperature;
+                    break;
+            }
+
+            return random.Next(minTemperature, maxTemperature);
+        }
+
         public Weather() { }
     }
 
@@ -51,7 +97,7 @@ namespace DynamicWeather.Models
         public Weather[] AllWeathers;
         
         internal Weathers() { }
-        
+
         internal static void DeserializeAndValidateXML()
         {
             XMLParser<Weathers> xmlParser = new(@"Plugins/DynamicWeather/Weathers.xml");
