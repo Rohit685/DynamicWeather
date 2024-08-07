@@ -26,6 +26,7 @@ namespace DynamicWeather.Models
         [XmlAttribute]
         public int MaxTemperature { get; set; }
         
+        [XmlIgnore]
         internal Texture Texture { get; set; }
 
         internal Weather(WeatherTypesEnum weatherTypesEnum, string weatherName, int temperature, int minTemperature, int maxTemperature)
