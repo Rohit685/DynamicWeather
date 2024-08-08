@@ -53,12 +53,20 @@ namespace DynamicWeather.Helpers
                 if (!Enum.TryParse(filename, true, out WeatherTypesEnum type))
                 {
                     Game.LogTrivial($"Invalid texture name found in directory: {filename}");
+                    continue;
                 }
                 if (Weathers.WeatherData[type].Texture != null)
                 {
                     Game.LogTrivial($"Duplicate texture types found in directory: {filename}");
+                    continue;
                 }
                 Weathers.WeatherData[type].Texture = Game.CreateTextureFromFile(texture);
+                if (type == WeatherTypesEnum.ExtraSunny)
+                {
+                    Weathers.WeatherData[WeatherTypesEnum.Clear].Texture = Game.CreateTextureFromFile(texture);
+                    Weathers.WeatherData[WeatherTypesEnum.Neutral].Texture = Game.CreateTextureFromFile(texture);
+                    
+                }
             }
         }
     }

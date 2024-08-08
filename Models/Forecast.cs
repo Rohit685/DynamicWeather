@@ -15,10 +15,10 @@ namespace DynamicWeather
 {
     internal class Forecast
     {
-        internal List<Weather> WeatherList = new List<Weather>();
+        internal List<Weather> WeatherList;
         private int currWeatherIndex;
         internal Weather CurrentWeather => WeatherList[currWeatherIndex];
-        internal Weather NextWeather => WeatherList[currWeatherIndex + 1] != null ? WeatherList[currWeatherIndex + 1] : WeatherList[0];
+        internal Weather NextWeather => WeatherList.GetNext(currWeatherIndex);
         private List<Text> TextList;
         private List<Texture> TexturesList;
         private double timeInterval;
@@ -41,37 +41,30 @@ namespace DynamicWeather
 
         internal Forecast(int interval)
         {
-            WeatherList = CreateForecast();
-            currWeatherIndex = 0;
-            timeInterval = interval;
+            WeatherList = new List<Weather>();
             TextList = new List<Text>();
             TexturesList = new List<Texture>();
-            for (var index = 0; index < WeatherList.Count; index++)
-            {
-                var weather = WeatherList[index];
-                Text weatherText = new Text(weather.Temperature.ToString() + "°", 40, Color.White);
-                TextList.Add(weatherText);
-                TexturesList.Add(weather.Texture);
-            }
+            CreateForecast();
+            currWeatherIndex = 0;
+            timeInterval = interval;
         }
 
         internal void Process()
         {
-            DateTime lastTransitionTime = NativeFunction.Natives.GET_GAME_TIME<DateTime>();
-
+            DateTime lastTransitionTime = GetTime();
+            NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(CurrentWeather.WeatherName);
             while (true)
             {
-                GameFiber.Yield(); 
+                GameFiber.Yield();
 
-                TimeSpan elapsedTime = NativeFunction.Natives.GET_GAME_TIME<DateTime>() - lastTransitionTime;
+                TimeSpan elapsedTime = GetTime() - lastTransitionTime;
 
-                if (elapsedTime.TotalHours >= timeInterval - 0.5)
+                if (elapsedTime.TotalHours >= (timeInterval - 0.5))
                 {
-                    TransitionWeather(); 
-                    lastTransitionTime = NativeFunction.Natives.GET_GAME_TIME<DateTime>(); 
+                    TransitionWeather();
+                    lastTransitionTime = GetTime();
                 }
 
-                GameFiber.Sleep(5000);
             }
 
         }
@@ -82,37 +75,61 @@ namespace DynamicWeather
             while (true)
             {
                 GameFiber.Yield();
-                percentChanged += 0.001f;
-                NativeFunction.Natives.x578C752848ECFA0C(Game.GetHashKey(CurrentWeather.WeatherName), 
-                    Game.GetHashKey(NextWeather.WeatherName), percentChanged);
+                percentChanged += 1f;
+                // NativeFunction.Natives.x578C752848ECFA0C(Game.GetHashKey(CurrentWeather.WeatherName), 
+                //     Game.GetHashKey(NextWeather.WeatherName), percentChanged);
+                // for testing, leave it commented out cuz its hard to test with the transitions.
                 if (percentChanged >= 0.99)
                 {
                     NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(NextWeather.WeatherName);
                     currWeatherIndex++;
+                    if (currWeatherIndex == WeatherList.Count - 2)
+                    {
+                        CreateForecast();
+                    }
+                    if(currWeatherIndex == WeatherList.Count - 1)
+                    {
+                        currWeatherIndex = 0;
+                    }
                     break;
                 }
             }
         }
 
-        internal static List<Weather> CreateForecast()
+        internal void CreateForecast()
         {
             List<Weather> weatherList = new List<Weather>();
             Random random = new Random(DateTime.Today.Millisecond);
-            int index = random.Next(stages.Length);
-            weatherList.Add(Weathers.WeatherData[stages[index]]);
+            int index = random.Next(0,8);
+            if (WeatherList.Count != 0)
+            {
+                Enum.TryParse(CurrentWeather.WeatherName, true, out WeatherTypesEnum type);
+                weatherList.Add(Weathers.WeatherData[type]);
+            }
+            else
+            {
+                weatherList.Add(Weathers.WeatherData[stages[index]]);
+                index++;
+            }
             for (int i = 1; i < 5; i++)
             {
-                if (random.Next(101) > 50)
+                weatherList.Add(Weathers.WeatherData[stages.Get(index)]);
+                index++;
+                if (index >= stages.Length)
                 {
-                    index++;
-                    weatherList.Add(Weathers.WeatherData[stages.GetNext(index)]);
-                }
-                else
-                {
-                    weatherList.Add(Weathers.WeatherData[stages.GetNext(index)]);
+                    index = 0;
                 }
             }
-            return weatherList;
+            WeatherList = weatherList;
+            TextList.Clear();
+            TexturesList.Clear();
+            for (index = 0; index < WeatherList.Count; index++)
+            {
+                var weather = WeatherList[index];
+                Text weatherText = new Text(weather.Temperature.ToString() + "°", 40, Color.White);
+                TextList.Add(weatherText);
+                TexturesList.Add(weather.Texture);
+            }
         }
 
         internal void DrawForecast(Rage.Graphics g)
@@ -121,8 +138,23 @@ namespace DynamicWeather
             TextureHelper.DrawTexture(g, TexturesList);
             TextureHelper.DrawText(g, TextList);
             //DateTime
-            TextureHelper.DrawText(g, new Text(World.DateTime.ToString("f"), 40, Color.White), 1, 1);
+            SizeF size = Game.Resolution;
+            TextureHelper.DrawText(g, new Text(GetTimeString(), 40, Color.White), size.Width / 2, 1);
             //change pos!!
+        }
+
+        internal static DateTime GetTime()
+        {
+            int lastTransitionHour = NativeFunction.Natives.GET_CLOCK_HOURS<int>();
+            int lastTransitionMinute = NativeFunction.Natives.GET_CLOCK_MINUTES<int>();
+            return new DateTime(1, 1, 1, lastTransitionHour, lastTransitionMinute, 0);
+        }
+        
+        internal static string GetTimeString()
+        {
+            int lastTransitionHour = NativeFunction.Natives.GET_CLOCK_HOURS<int>();
+            int lastTransitionMinute = NativeFunction.Natives.GET_CLOCK_MINUTES<int>();
+            return new DateTime(1, 1, 1, lastTransitionHour, lastTransitionMinute, 0).ToString("t");
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using DynamicWeather.Enums;
 using DynamicWeather.Helpers;
 using DynamicWeather.Models;
 using Rage;
@@ -19,7 +20,9 @@ namespace DynamicWeather
         {
             Weathers.DeserializeAndValidateXML();
             TextureHelper.LoadAllTextures();
+            GameFiber.WaitUntil(() => !Game.IsLoading);
             currentForecast = new Forecast(1);
+            GameFiber.StartNew(currentForecast.Process);
             while (true)
             {
                 GameFiber.Yield();
