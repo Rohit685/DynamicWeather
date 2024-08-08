@@ -48,19 +48,26 @@ namespace DynamicWeather
 
         internal void Process()
         {
-            (int, int) lastTransitionTime = GetTime();
-
+            DateTime lastTransitionTime = GameTimeImproved.GetTime();
+            NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(WeatherList[currWeatherIndex].WeatherName);
             while (true)
             {
                 GameFiber.Yield();
-                (int, int) currTime = GetTime();
-                (int, int) elapsedTime = GetTimeElapsed(lastTransitionTime.Item1, lastTransitionTime.Item2,
-                    currTime.Item1, currTime.Item2);
-
-                if (elapsedTime.Item1 >= (timeInterval - 0.5))
+                DateTime currTime = GameTimeImproved.GetTime();
+                TimeSpan elapsedTime = currTime - lastTransitionTime;
+                
+                if (elapsedTime.TotalMinutes >= ((timeInterval - 0.5) * 60))
                 {
-                    TransitionWeather(WeatherList[currWeatherIndex].WeatherName, WeatherList[currWeatherIndex + 1].WeatherName); 
-                    lastTransitionTime = NativeFunction.Natives.GET_GAME_TIME<DateTime>(); 
+                    TransitionWeather(WeatherList[currWeatherIndex].WeatherName, WeatherList[currWeatherIndex + 1].WeatherName);
+                    lastTransitionTime = GameTimeImproved.GetTime();
+                    currWeatherIndex++;
+                    if (currWeatherIndex >= WeatherList.Count - 1)
+                    {
+                        currWeatherIndex = 0;
+                        WeatherList = CreateForecast(WeatherList[currWeatherIndex + 1].WeatherName);
+                        GenerateForecastTextures();
+                        Game.LogTrivial($"New forecast generated! --> {String.Join("", WeatherList.Select(w => w.WeatherName))}");
+                    }
                 }
 
                 // GameFiber.Sleep(5000);
@@ -80,23 +87,25 @@ namespace DynamicWeather
                 if (percentChanged >= 0.99)
                 {
                     NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(NextWeather);
-                    currWeatherIndex++;
-                    if (currWeatherIndex >= WeatherList.Count)
-                    {
-                        currWeatherIndex = 0;
-                        CreateForecast();
-                    }
                     break;
                 }
             }
         }
 
-        internal static List<Weather> CreateForecast()
+        internal static List<Weather> CreateForecast(string startingWeatherName = "")
         {
             List<Weather> weatherList = new List<Weather>();
             Random random = new Random(DateTime.Today.Millisecond);
-            int index = random.Next(stages.Length);
-            weatherList.Add(Weathers.WeatherData[stages[index]]);
+            int index = random.Next(0,5);
+            if (startingWeatherName.Length == 0)
+            {
+                weatherList.Add(Weathers.WeatherData[stages[index]]);
+            }
+            else
+            {
+                Enum.TryParse(startingWeatherName, true, out WeatherTypesEnum type);
+                weatherList.Add(Weathers.WeatherData[type]);
+            }
             for (int i = 1; i < 5; i++)
             {
                 if(index >= stages.Length)
@@ -129,41 +138,7 @@ namespace DynamicWeather
             TextureHelper.DrawText(g, TextList);
             
             SizeF size = Game.Resolution;
-            TextureHelper.DrawText(g, new Text(GetTimeString(), 40, Color.White), size.Width / 2, 1);
-        }
-
-        internal (int, int) GetTimeElapsed(int startHour, int startMinute, int endHour, int endMinute)
-        {
-            // Convert start and end times to minutes
-            int startTotalMinutes = startHour * 60 + startMinute;
-            int endTotalMinutes = endHour * 60 + endMinute;
-
-            // Calculate the difference in minutes
-            int elapsedMinutes = endTotalMinutes - startTotalMinutes;
-
-            // If the elapsed time is negative, adjust for the next day
-            if (elapsedMinutes < 0)
-            {
-                elapsedMinutes += 24 * 60; // Add 24 hours worth of minutes
-            }
-
-            // Convert elapsed time back to hours and minutes
-            int hoursElapsed = elapsedMinutes / 60;
-            int minutesElapsed = elapsedMinutes % 60;
-
-            return (hoursElapsed, minutesElapsed);
-        }
-
-        internal (int, int) GetTime()
-        {
-            return (NativeFunction.Natives.GET_CLOCK_HOURS<int>(), NativeFunction.Natives.GET_CLOCK_MINUTES<int>());
-        }
-        
-        internal string GetTimeString()
-        {
-            int lastTransitionHour = NativeFunction.Natives.GET_CLOCK_HOURS<int>();
-            int lastTransitionMinute = NativeFunction.Natives.GET_CLOCK_MINUTES<int>();
-            return new DateTime(1, 1, 1, lastTransitionHour, lastTransitionMinute, 0).ToString("t");
+            TextureHelper.DrawText(g, new Text(GameTimeImproved.GetTimeString(), 40, Color.White), size.Width / 2, 1);
         }
     }
 }
