@@ -20,19 +20,20 @@ namespace DynamicWeather
         {
             Weathers.DeserializeAndValidateXML();
             TextureHelper.LoadAllTextures();
+            Settings.ReadSettings();
             GameFiber.WaitUntil(() => !Game.IsLoading);
-            currentForecast = new Forecast(1);
+            currentForecast = new Forecast(Settings.TimeInterval);
             GameFiber.StartNew(GameTimeImproved.Process);
             GameFiber.StartNew(currentForecast.Process);
             while (true)
             {
                 GameFiber.Yield();
-                if (Game.IsKeyDownRightNow(Keys.Tab) && !drawing) 
+                if (IsKeyDownRightNow() && !drawing) 
                 {
                     Start();
                     drawing = true;
                 }
-                else if (!Game.IsKeyDownRightNow(Keys.Tab) && drawing)
+                else if (!IsKeyDownRightNow() && drawing)
                 {
                     Stop();
                     drawing = false;
@@ -54,6 +55,14 @@ namespace DynamicWeather
         private static void FrameRender(object sender, GraphicsEventArgs e)
         {
             currentForecast.DrawForecast(e.Graphics);
+        }
+
+        private static bool IsKeyDownRightNow()
+        {
+            return Settings.GlobalModifierKey.Equals(Keys.None)
+                ? Game.IsKeyDownRightNow(Settings.ShowForecastKey)
+                : (Game.IsKeyDownRightNow(Settings.GlobalModifierKey) &&
+                   Game.IsKeyDownRightNow(Settings.ShowForecastKey));
         }
     }
 }   

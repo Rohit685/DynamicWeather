@@ -16,7 +16,7 @@ namespace DynamicWeather
     {
         internal List<Weather> WeatherList = new List<Weather>();
         private int currWeatherIndex;
-       private List<Text> TextList;
+        private List<Text> TextList;
         private List<Texture> TexturesList;
         private double timeInterval;
         internal static Random random = new Random(DateTime.Today.Millisecond);
