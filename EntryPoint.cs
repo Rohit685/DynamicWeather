@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using DynamicWeather.Enums;
 using DynamicWeather.Helpers;
 using DynamicWeather.Models;
 using Rage;
@@ -14,10 +15,15 @@ namespace DynamicWeather
     internal static class EntryPoint
     {
         internal static bool drawing = false;
+        internal static Forecast currentForecast = null;
         internal static void Main()
         {
-            TextureHelper.LoadAllTextures();
             Weathers.DeserializeAndValidateXML();
+            TextureHelper.LoadAllTextures();
+            GameFiber.WaitUntil(() => !Game.IsLoading);
+            currentForecast = new Forecast(1);
+            GameFiber.StartNew(GameTimeImproved.Process);
+            GameFiber.StartNew(currentForecast.Process);
             while (true)
             {
                 GameFiber.Yield();
@@ -47,7 +53,7 @@ namespace DynamicWeather
         
         private static void FrameRender(object sender, GraphicsEventArgs e)
         {
-           TextureHelper.Draw(e.Graphics, TextureHelper.textures);
+            currentForecast.DrawForecast(e.Graphics);
         }
     }
 }   

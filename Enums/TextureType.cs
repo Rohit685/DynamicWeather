@@ -9,30 +9,30 @@ namespace DynamicWeather.Enums
 {
     internal static class TextureType
     {
-        internal static Dictionary<WeatherType, string> WeatherTypes = new Dictionary<WeatherType, string>()
+        internal static Dictionary<WeatherTypesEnum, string> EnumToTexture = new Dictionary<WeatherTypesEnum, string>()
         {
-            { WeatherType.Blizzard, "Blizzard" },
-            { WeatherType.Clear | WeatherType.Neutral | WeatherType.ExtraSunny, "ExtraSunny" },
-            { WeatherType.Clearing, "Clearing" },
-            { WeatherType.Clouds, "Clouds" },
-            { WeatherType.Foggy, "Foggy" },
-            { WeatherType.Halloween, "Halloween" },
-            { WeatherType.Overcast, "Overcast" },
-            { WeatherType.Rain, "Rain" },
-            { WeatherType.Smog, "Smog" },
-            { WeatherType.Snow, "Snow" },
-            { WeatherType.Snowlight, "Snowlight" },
-            { WeatherType.Thunder, "Thunder" },
-            { WeatherType.Xmas, "Xmas" }
+            { WeatherTypesEnum.Blizzard, "BLIZZARD" },
+            { WeatherTypesEnum.Clear | WeatherTypesEnum.Neutral | WeatherTypesEnum.ExtraSunny, "EXTRASUNNY" },
+            { WeatherTypesEnum.Clearing, "CLEARING" },
+            { WeatherTypesEnum.Clouds, "CLOUDS" },
+            { WeatherTypesEnum.Foggy, "FOGGY" },
+            { WeatherTypesEnum.Halloween, "HALLOWEEN" },
+            { WeatherTypesEnum.Overcast, "OVERCAST" },
+            { WeatherTypesEnum.Rain, "RAIN" },
+            { WeatherTypesEnum.Smog, "SMOG" },
+            { WeatherTypesEnum.Snow, "SNOW" },
+            { WeatherTypesEnum.Snowlight, "SNOWLIGHT" },
+            { WeatherTypesEnum.Thunder, "THUNDER" },
+            { WeatherTypesEnum.Xmas, "XMAS" }
         };
         
-        internal static string GetTextureName(WeatherType weatherType)
+        internal static string GetTextureName(WeatherTypesEnum weatherTypesEnum)
         {
-            if (WeatherTypes.ContainsKey(weatherType))
+            if (EnumToTexture.ContainsKey(weatherTypesEnum))
             {
-                return WeatherTypes[weatherType];
+                return EnumToTexture[weatherTypesEnum];
             }
-            return "ExtraSunny";
+            return "EXTRASUNNY";
         }
     }
 }

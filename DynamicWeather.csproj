@@ -54,11 +54,12 @@
   <ItemGroup>
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Enums\TextureType.cs" />
-    <Compile Include="Enums\WeatherType.cs" />
+    <Compile Include="Enums\WeatherTypesEnum.cs" />
+    <Compile Include="Helpers\GameTimeImproved.cs" />
     <Compile Include="Helpers\TextureHelper.cs" />
     <Compile Include="IO\XMLParser.cs" />
     <Compile Include="Models\Forecast.cs" />
-    <Compile Include="Models\WeatherModels\Weather.cs" />
+    <Compile Include="Models\Weather.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
