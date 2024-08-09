@@ -23,7 +23,6 @@ namespace DynamicWeather
             GameFiber.WaitUntil(() => !Game.IsLoading);
             currentForecast = new Forecast(1);
             GameFiber.StartNew(GameTimeImproved.Process);
-            GameFiber.Wait(2000);
             GameFiber.StartNew(currentForecast.Process);
             while (true)
             {

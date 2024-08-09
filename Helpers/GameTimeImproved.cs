@@ -16,6 +16,7 @@ internal static class GameTimeImproved
     
     internal static void Process()
     {
+        NativeFunction.Natives.SET_CLOCK_DATE(1,1,2024);
         year = NativeFunction.Natives.GET_CLOCK_YEAR<int>();
         month = NativeFunction.Natives.GET_CLOCK_MONTH<int>();
         day = NativeFunction.Natives.GET_CLOCK_DAY_OF_MONTH<int>();

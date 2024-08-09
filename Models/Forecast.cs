@@ -19,6 +19,7 @@ namespace DynamicWeather
        private List<Text> TextList;
         private List<Texture> TexturesList;
         private double timeInterval;
+        internal static Random random = new Random(DateTime.Today.Millisecond);
 
         private static WeatherTypesEnum[] stages = {
             WeatherTypesEnum.ExtraSunny,
@@ -66,11 +67,10 @@ namespace DynamicWeather
                         currWeatherIndex = 0;
                         WeatherList = CreateForecast(WeatherList[currWeatherIndex + 1].WeatherName);
                         GenerateForecastTextures();
-                        Game.LogTrivial($"New forecast generated! --> {String.Join("", WeatherList.Select(w => w.WeatherName))}");
+                        Game.LogTrivial($"New forecast generated! --> {String.Join(", ", WeatherList.Select(w => w.WeatherName))}");
                     }
                 }
-
-                // GameFiber.Sleep(5000);
+                GameFiber.Sleep(5000);
             }
 
         }
@@ -81,12 +81,13 @@ namespace DynamicWeather
             while (true)
             {
                 GameFiber.Yield();
-                percentChanged += 1f;
-                // NativeFunction.Natives.x578C752848ECFA0C(Game.GetHashKey(CurrentWeather), 
-                //     Game.GetHashKey(NextWeather), percentChanged);
+                percentChanged += 0.05f;
+                NativeFunction.Natives.x578C752848ECFA0C(Game.GetHashKey(CurrentWeather), 
+                    Game.GetHashKey(NextWeather), percentChanged);
                 if (percentChanged >= 0.99)
                 {
                     NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(NextWeather);
+                    Game.LogTrivial($"Transitioned --> {NextWeather}");
                     break;
                 }
             }
@@ -95,7 +96,6 @@ namespace DynamicWeather
         internal static List<Weather> CreateForecast(string startingWeatherName = "")
         {
             List<Weather> weatherList = new List<Weather>();
-            Random random = new Random(DateTime.Today.Millisecond);
             int index = random.Next(0,5);
             if (startingWeatherName.Length == 0)
             {
