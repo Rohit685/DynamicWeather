@@ -1,69 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
-            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{BBF10F3A-89BA-4FDC-A835-C2E3635CDCF8}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>DynamicWeather</RootNamespace>
-        <AssemblyName>DynamicWeather</AssemblyName>
-        <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <LangVersion>latest</LangVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="RagePluginHook, Version=0.0.0.0, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>packages\RagePluginHook.1.109.1\lib\net472\RagePluginHook.dll</HintPath>
-        </Reference>
-        <Reference Include="System"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Drawing" />
-        <Reference Include="System.Windows.Forms" />
-        <Reference Include="System.Xml"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="EntryPoint.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs"/>
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="packages.config" />
-    </ItemGroup>
-    <ItemGroup>
-      <Content Include="Textures\partly-cloudy.png" />
-      <Content Include="Textures\rain.png" />
-      <Content Include="Textures\stormy-weather.png" />
-      <Content Include="Textures\summer.png" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BBF10F3A-89BA-4FDC-A835-C2E3635CDCF8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DynamicWeather</RootNamespace>
+    <AssemblyName>DynamicWeather</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <LangVersion>latest</LangVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="RAGENativeUI">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\RAGENativeUI.dll</HintPath>
+    </Reference>
+    <Reference Include="RagePluginHook, Version=0.0.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>packages\RagePluginHook.1.109.1\lib\net472\RagePluginHook.dll</HintPath>
+    </Reference>
+    <Reference Include="RagePluginHookSDK">
+      <HintPath>..\TragicCallouts\TragicCallouts\bin\Debug\RagePluginHookSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EntryPoint.cs" />
+    <Compile Include="Enums\TextureType.cs" />
+    <Compile Include="Enums\WeatherTypesEnum.cs" />
+    <Compile Include="Helpers\GameTimeImproved.cs" />
+    <Compile Include="Helpers\TextureHelper.cs" />
+    <Compile Include="IO\XMLParser.cs" />
+    <Compile Include="Models\Forecast.cs" />
+    <Compile Include="Models\Weather.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DynamicWeather\Textures\Blizzard.png" />
+    <Content Include="DynamicWeather\Textures\Clearing.png" />
+    <Content Include="DynamicWeather\Textures\Clouds.png" />
+    <Content Include="DynamicWeather\Textures\ExtraSunny.png" />
+    <Content Include="DynamicWeather\Textures\Foggy.png" />
+    <Content Include="DynamicWeather\Textures\Halloween.png" />
+    <Content Include="DynamicWeather\Textures\Overcast.png" />
+    <Content Include="DynamicWeather\Textures\Rain.png" />
+    <Content Include="DynamicWeather\Textures\SevereWeather.png" />
+    <Content Include="DynamicWeather\Textures\Smog.png" />
+    <Content Include="DynamicWeather\Textures\Snow.png" />
+    <Content Include="DynamicWeather\Textures\Snowlight.png" />
+    <Content Include="DynamicWeather\Textures\Thunder.png" />
+    <Content Include="DynamicWeather\Textures\XMAS.png" />
+    <Content Include="DynamicWeather\Weathers.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">
     </Target>
     <Target Name="AfterBuild">
     </Target>
     -->
-
 </Project>
