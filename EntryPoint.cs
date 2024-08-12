@@ -22,8 +22,9 @@ namespace DynamicWeather
             TextureHelper.LoadAllTextures();
             Settings.ReadSettings();
             GameFiber.WaitUntil(() => !Game.IsLoading);
-            currentForecast = new Forecast(Settings.TimeInterval);
             GameFiber.StartNew(GameTimeImproved.Process);
+            GameFiber.WaitUntil(() => GameTimeImproved.TimeInit);
+            currentForecast = new Forecast(Settings.TimeInterval);
             GameFiber.StartNew(currentForecast.Process);
             while (true)
             {

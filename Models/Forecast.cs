@@ -103,6 +103,7 @@ namespace DynamicWeather
                 Weather weather = Weathers.WeatherData[stages[index]];
                 time = UpdateTime(stages[index], time);
                 weatherList.Add(weather);
+                index++;
             }
             else
             {

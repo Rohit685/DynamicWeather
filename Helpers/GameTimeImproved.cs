@@ -13,6 +13,7 @@ internal static class GameTimeImproved
     internal static int minute;
     internal static int second;
     internal static bool dayReset = false;
+    internal static bool TimeInit = false;
     
     internal static void Process()
     {
@@ -23,6 +24,7 @@ internal static class GameTimeImproved
         hour = NativeFunction.Natives.GET_CLOCK_HOURS<int>();
         minute = NativeFunction.Natives.GET_CLOCK_MINUTES<int>();
         second = NativeFunction.Natives.GET_CLOCK_SECONDS<int>();
+        TimeInit = true;
         while (true)
         {
             GameFiber.Yield();

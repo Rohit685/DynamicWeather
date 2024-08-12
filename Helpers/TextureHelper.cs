@@ -41,7 +41,7 @@ namespace DynamicWeather.Helpers
             for (int index = 0; index < texts.Count; index++)
             {
                 Text text = texts[index];
-                DrawText(g, text, (size.Width / (texts.Count + 1) * (index + 1)) + 30, (size.Height / 4) - 50);
+                DrawText(g, text, (size.Width / (texts.Count + 1) * (index + 1)), (size.Height / 4) - 100);
             }
         }
         
