@@ -96,15 +96,20 @@ namespace DynamicWeather
         internal static List<Weather> CreateForecast(string startingWeatherName = "")
         {
             List<Weather> weatherList = new List<Weather>();
+            DateTime time = GameTimeImproved.GetTime();
             int index = random.Next(0,5);
             if (startingWeatherName.Length == 0)
             {
-                weatherList.Add(Weathers.WeatherData[stages[index]]);
+                Weather weather = Weathers.WeatherData[stages[index]];
+                time = UpdateTime(stages[index], time);
+                weatherList.Add(weather);
             }
             else
             {
                 Enum.TryParse(startingWeatherName, true, out WeatherTypesEnum type);
-                weatherList.Add(Weathers.WeatherData[type]);
+                Weather weather = Weathers.WeatherData[type];
+                time = UpdateTime(type, time);
+                weatherList.Add(weather);
             }
             for (int i = 1; i < 5; i++)
             {
@@ -112,10 +117,20 @@ namespace DynamicWeather
                 {
                     index = 0;
                 }
-                weatherList.Add(Weathers.WeatherData[stages[index]]);
+                Weather weather = Weathers.WeatherData[stages[index]];
+                time = UpdateTime(stages[index], time);
+                weatherList.Add(weather);
                 index++;
             }
             return weatherList;
+        }
+
+        internal static DateTime UpdateTime(WeatherTypesEnum type, DateTime time)
+        {
+            Weather weather = Weathers.WeatherData[type];
+            DateTime predictedTime = time += TimeSpan.FromHours(Settings.TimeInterval);
+            weather.WeatherTime = predictedTime;
+            return predictedTime;
         }
 
         internal void GenerateForecastTextures()
@@ -125,7 +140,8 @@ namespace DynamicWeather
             for (var index = 0; index < WeatherList.Count; index++)
             {
                 var weather = WeatherList[index];
-                Text weatherText = new Text(weather.Temperature.ToString() + "°", 40, Color.White);
+                string f = $"{weather.Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{weather.WeatherTime.ToString("t")}";
+                Text weatherText = new Text(f, 40, Color.White);
                 TextList.Add(weatherText);
                 TexturesList.Add(weather.Texture);
             }
@@ -133,7 +149,6 @@ namespace DynamicWeather
 
         internal void DrawForecast(Rage.Graphics g)
         {
-            //Forecast
             TextureHelper.DrawTexture(g, TexturesList);
             TextureHelper.DrawText(g, TextList);
             

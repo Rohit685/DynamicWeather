@@ -28,6 +28,7 @@ namespace DynamicWeather
             while (true)
             {
                 GameFiber.Yield();
+                NativeFunction.Natives.DISABLE_CONTROL_ACTION(2, 243, false);
                 if (IsKeyDownRightNow() && !drawing) 
                 {
                     Start();

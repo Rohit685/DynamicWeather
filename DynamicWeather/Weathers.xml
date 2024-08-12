@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Weathers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<Weathers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" UseFreedomUnits="true">
     <Weather WeatherName="Clear" MinTemperature="59" MaxTemperature="77" />
     <Weather WeatherName="Rain" MinTemperature="50" MaxTemperature="68" />
     <Weather WeatherName="Snow" MinTemperature="23" MaxTemperature="41" />

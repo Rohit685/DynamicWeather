@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 using DynamicWeather.Enums;
 using DynamicWeather.Helpers;
@@ -28,6 +29,9 @@ namespace DynamicWeather.Models
         
         [XmlIgnore]
         internal Texture Texture { get; set; }
+        
+        [XmlIgnore]
+        internal DateTime WeatherTime { get; set; }
 
         internal Weather(WeatherTypesEnum weatherTypesEnum, string weatherName, int temperature, int minTemperature, int maxTemperature)
         {
@@ -92,9 +96,12 @@ namespace DynamicWeather.Models
     public class Weathers
     {
         internal static Dictionary<WeatherTypesEnum, Weather> WeatherData = new Dictionary<WeatherTypesEnum, Weather>();
+        internal static bool usingMuricaUnits = true;
         
         [XmlElement("Weather")]
         public Weather[] AllWeathers;
+
+        [XmlAttribute("UseFreedomUnits")] public bool MuricaUnits = true; 
         
         internal Weathers() { }
 
@@ -102,6 +109,7 @@ namespace DynamicWeather.Models
         {
             XMLParser<Weathers> xmlParser = new(@"Plugins/DynamicWeather/Weathers.xml");
             Weathers data = xmlParser.DeserializeXML();
+            usingMuricaUnits = data.MuricaUnits;
             Game.LogTrivial($"Number of weathers: {data.AllWeathers.Length}");
             Random random = new Random(DateTime.Today.Millisecond);
             foreach (Weather weather in data.AllWeathers)
