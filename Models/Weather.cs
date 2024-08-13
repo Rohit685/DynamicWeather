@@ -89,6 +89,14 @@ namespace DynamicWeather.Models
         }
 
         public Weather() { }
+
+        public Weather Clone()
+        {
+            Weather returnVal = new Weather(this.WeatherTypesEnum, this.WeatherName, this.Temperature,
+                this.MinTemperature, this.MaxTemperature);
+            returnVal.Texture = this.Texture;
+            return returnVal;
+        }
     }
 
     [XmlRoot("Weathers")]

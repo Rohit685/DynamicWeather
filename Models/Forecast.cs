@@ -93,23 +93,23 @@ namespace DynamicWeather
             }
         }
 
-        internal static List<Weather> CreateForecast(string startingWeatherName = "")
+        internal List<Weather> CreateForecast(string startingWeatherName = "")
         {
             List<Weather> weatherList = new List<Weather>();
             DateTime time = GameTimeImproved.GetTime();
             int index = random.Next(0,5);
             if (startingWeatherName.Length == 0)
             {
-                Weather weather = Weathers.WeatherData[stages[index]];
-                time = UpdateTime(stages[index], time);
+                Weather weather = Weathers.WeatherData[stages[index]].Clone();
                 weatherList.Add(weather);
                 index++;
             }
             else
             {
                 Enum.TryParse(startingWeatherName, true, out WeatherTypesEnum type);
-                Weather weather = Weathers.WeatherData[type];
-                time = UpdateTime(type, time);
+                Weather weather = Weathers.WeatherData[type].Clone();
+                time = UpdateTime(weather, time);
+                weatherList.Add(WeatherList[currWeatherIndex]);
                 weatherList.Add(weather);
             }
             for (int i = 1; i < 5; i++)
@@ -118,17 +118,16 @@ namespace DynamicWeather
                 {
                     index = 0;
                 }
-                Weather weather = Weathers.WeatherData[stages[index]];
-                time = UpdateTime(stages[index], time);
+                Weather weather = Weathers.WeatherData[stages[index]].Clone();
+                time = UpdateTime(weather, time);
                 weatherList.Add(weather);
                 index++;
             }
             return weatherList;
         }
 
-        internal static DateTime UpdateTime(WeatherTypesEnum type, DateTime time)
+        internal static DateTime UpdateTime(Weather weather, DateTime time)
         {
-            Weather weather = Weathers.WeatherData[type];
             DateTime predictedTime = time += TimeSpan.FromHours(Settings.TimeInterval);
             weather.WeatherTime = predictedTime;
             return predictedTime;
@@ -154,7 +153,7 @@ namespace DynamicWeather
             TextureHelper.DrawText(g, TextList);
             
             SizeF size = Game.Resolution;
-            TextureHelper.DrawText(g, new Text(GameTimeImproved.GetTimeString(), 40, Color.White), size.Width / 2, 1);
+            TextureHelper.DrawText(g, new Text(GameTimeImproved.GetTimeString(), 40, Color.White), size.Width / 2, 10);
         }
     }
 }
