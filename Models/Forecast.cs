@@ -153,7 +153,7 @@ namespace DynamicWeather
             TextureHelper.DrawText(g, TextList);
             
             SizeF size = Game.Resolution;
-            TextureHelper.DrawText(g, new Text(GameTimeImproved.GetTimeString(), 40, Color.White), size.Width / 2, 10);
+            TextureHelper.DrawText(g, new Text(GameTimeImproved.GetTimeString(), 37, Color.White), size.Width / 2, 10);
         }
     }
 }
