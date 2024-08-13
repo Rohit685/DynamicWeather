@@ -60,6 +60,7 @@ namespace DynamicWeather
                 if (elapsedTime.TotalMinutes >= ((timeInterval - 0.1) * 60))
                 {
                     TransitionWeather(WeatherList[currWeatherIndex].WeatherName, WeatherList[currWeatherIndex + 1].WeatherName);
+                    Game.LogTrivial($"Starting the transition from {WeatherList[currWeatherIndex].WeatherName} --> {WeatherList[currWeatherIndex + 1].WeatherName}");
                     lastTransitionTime = GameTimeImproved.GetTime();
                     currWeatherIndex++;
                     if (currWeatherIndex >= WeatherList.Count - 1)
@@ -67,7 +68,6 @@ namespace DynamicWeather
                         currWeatherIndex = 0;
                         WeatherList = CreateForecast(WeatherList[currWeatherIndex + 1].WeatherName);
                         GenerateForecastTextures();
-                        Game.LogTrivial($"New forecast generated! --> {String.Join(", ", WeatherList.Select(w => w.WeatherName))}");
                     }
                 }
                 GameFiber.Sleep(5000);
@@ -123,6 +123,7 @@ namespace DynamicWeather
                 weatherList.Add(weather);
                 index++;
             }
+            Game.LogTrivial($"New forecast generated! --> {String.Join(", ", weatherList.Select(w => w.WeatherName))}");
             return weatherList;
         }
 

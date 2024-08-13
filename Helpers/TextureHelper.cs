@@ -58,6 +58,7 @@ namespace DynamicWeather.Helpers
                 {
                     Game.LogTrivial($"Duplicate texture types found in directory: {filename}");
                 }
+                Game.LogTrivial($"Associated {filename} with {Weathers.WeatherData[type].WeatherName}");
                 Weathers.WeatherData[type].Texture = Game.CreateTextureFromFile(texture);
                 if (type == WeatherTypesEnum.ExtraSunny)
                 {
