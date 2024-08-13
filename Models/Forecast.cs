@@ -57,7 +57,7 @@ namespace DynamicWeather
                 DateTime currTime = GameTimeImproved.GetTime();
                 TimeSpan elapsedTime = currTime - lastTransitionTime;
                 
-                if (elapsedTime.TotalMinutes >= ((timeInterval - 0.5) * 60))
+                if (elapsedTime.TotalMinutes >= ((timeInterval - 0.1) * 60))
                 {
                     TransitionWeather(WeatherList[currWeatherIndex].WeatherName, WeatherList[currWeatherIndex + 1].WeatherName);
                     lastTransitionTime = GameTimeImproved.GetTime();
@@ -81,7 +81,7 @@ namespace DynamicWeather
             while (true)
             {
                 GameFiber.Yield();
-                percentChanged += 0.05f;
+                percentChanged += 0.01f;
                 NativeFunction.Natives.x578C752848ECFA0C(Game.GetHashKey(CurrentWeather), 
                     Game.GetHashKey(NextWeather), percentChanged);
                 if (percentChanged >= 0.99)
