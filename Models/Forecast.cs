@@ -154,7 +154,7 @@ namespace DynamicWeather
                     $"{weather.Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{weather.WeatherTime.ToString("t")}";
                 Text weatherText = new Text(f, 40, Color.White);
                 TextList.Add(weatherText);
-                TexturesList.Add(weather.Texture);
+                TexturesList.Add(weather.GetTexture());
             }
         }
 
@@ -174,7 +174,7 @@ namespace DynamicWeather
             String f =
                 $"{WeatherList[currWeatherIndex].Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n";
             TextureHelper.DrawText(g, new Text(f, 37, Color.White), size.Width - 200, size.Height / 5);
-            TextureHelper.DrawTexture(g, WeatherList[currWeatherIndex].Texture, size.Width - 200, size.Height / 10, 96, 96);
+            TextureHelper.DrawTexture(g, WeatherList[currWeatherIndex].GetTexture(), size.Width - 200, size.Height / 10, 96, 96);
         }
     }
 }

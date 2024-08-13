@@ -28,7 +28,10 @@ namespace DynamicWeather.Models
         public int MaxTemperature { get; set; }
         
         [XmlIgnore]
-        internal Texture Texture { get; set; }
+        internal Texture DayTexture { get; set; }
+        
+        [XmlIgnore]
+        internal Texture NightTexture { get; set; }
         
         [XmlIgnore]
         internal DateTime WeatherTime { get; set; }
@@ -40,7 +43,8 @@ namespace DynamicWeather.Models
             Temperature = temperature;
             MinTemperature = minTemperature;
             MaxTemperature = maxTemperature;
-            Texture = null;
+            DayTexture = null;
+            NightTexture = null;
         }
 
         internal int GetTemperature(Weather weather)
@@ -94,8 +98,15 @@ namespace DynamicWeather.Models
         {
             Weather returnVal = new Weather(this.WeatherTypesEnum, this.WeatherName, this.Temperature,
                 this.MinTemperature, this.MaxTemperature);
-            returnVal.Texture = this.Texture;
+            returnVal.DayTexture = this.DayTexture;
+            returnVal.NightTexture = this.NightTexture;
             return returnVal;
+        }
+
+        internal Texture GetTexture()
+        {
+            if (GameTimeImproved.IsNightTime()) return NightTexture;
+            return DayTexture;
         }
     }
 

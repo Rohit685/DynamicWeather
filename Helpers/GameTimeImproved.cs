@@ -64,6 +64,11 @@ internal static class GameTimeImproved
     {
             return new DateTime(year, month,day,hour, minute, second);
     }
+
+    internal static bool IsNightTime()
+    {
+        return hour > 18 || hour < 6;
+    }
         
     internal static string GetTimeString()
     {

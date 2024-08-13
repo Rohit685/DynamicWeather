@@ -54,17 +54,28 @@ namespace DynamicWeather.Helpers
                 {
                     Game.LogTrivial($"Invalid texture name found in directory: {filename}");
                 }
-                if (Weathers.WeatherData[type].Texture != null)
+                if ((Weathers.WeatherData[type].DayTexture != null) || (Weathers.WeatherData[type].NightTexture != null))
                 {
                     Game.LogTrivial($"Duplicate texture types found in directory: {filename}");
                 }
                 Game.LogTrivial($"Associated {filename} with {Weathers.WeatherData[type].WeatherName}");
-                Weathers.WeatherData[type].Texture = Game.CreateTextureFromFile(texture);
-                if (type == WeatherTypesEnum.ExtraSunny)
+                if (filename.Contains("DAY"))
                 {
-                    Weathers.WeatherData[WeatherTypesEnum.Clear].Texture = Game.CreateTextureFromFile(texture);
-                    Weathers.WeatherData[WeatherTypesEnum.Neutral].Texture = Game.CreateTextureFromFile(texture);
-    
+                    Weathers.WeatherData[type].DayTexture = Game.CreateTextureFromFile(texture);
+                    if (type == WeatherTypesEnum.Clear)
+                    {
+                        Weathers.WeatherData[WeatherTypesEnum.ExtraSunny].DayTexture = Game.CreateTextureFromFile(texture);
+                        Weathers.WeatherData[WeatherTypesEnum.Neutral].DayTexture = Game.CreateTextureFromFile(texture);
+                    }
+                }
+                else if(filename.Contains("NIGHT"))
+                {
+                    Weathers.WeatherData[type].NightTexture = Game.CreateTextureFromFile(texture);
+                    if (type == WeatherTypesEnum.Clear)
+                    {
+                        Weathers.WeatherData[WeatherTypesEnum.ExtraSunny].NightTexture = Game.CreateTextureFromFile(texture);
+                        Weathers.WeatherData[WeatherTypesEnum.Neutral].NightTexture = Game.CreateTextureFromFile(texture);
+                    }
                 }
             }
         }
