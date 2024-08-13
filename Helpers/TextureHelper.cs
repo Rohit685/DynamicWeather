@@ -78,6 +78,16 @@ namespace DynamicWeather.Helpers
                     }
                 }
             }
+
+            foreach (var weather in Weathers.WeatherData.Values)
+            {
+                if (weather.DayTexture == null || weather.NightTexture == null)
+                {
+                    Game.LogTrivial($"Both day and night textures were not found in the directory for {weather.WeatherName}");
+                    Game.DisplayNotification("new_editor", "warningtriangle", "ERROR", "~y~Dynamic Weather",
+                        $"Both day and night textures were not found in the directory for {weather.WeatherName}");
+                }
+            }
         }
     }
 

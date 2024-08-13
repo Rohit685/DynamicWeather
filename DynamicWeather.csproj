@@ -68,20 +68,32 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DynamicWeather\Textures\Blizzard.png" />
-    <Content Include="DynamicWeather\Textures\Clearing.png" />
-    <Content Include="DynamicWeather\Textures\Clouds.png" />
-    <Content Include="DynamicWeather\Textures\ExtraSunny.png" />
-    <Content Include="DynamicWeather\Textures\Foggy.png" />
-    <Content Include="DynamicWeather\Textures\Halloween.png" />
-    <Content Include="DynamicWeather\Textures\Overcast.png" />
-    <Content Include="DynamicWeather\Textures\Rain.png" />
-    <Content Include="DynamicWeather\Textures\SevereWeather.png" />
-    <Content Include="DynamicWeather\Textures\Smog.png" />
-    <Content Include="DynamicWeather\Textures\Snow.png" />
-    <Content Include="DynamicWeather\Textures\Snowlight.png" />
-    <Content Include="DynamicWeather\Textures\Thunder.png" />
-    <Content Include="DynamicWeather\Textures\XMAS.png" />
+    <Content Include="DynamicWeather\Textures\day_blizzard.png" />
+    <Content Include="DynamicWeather\Textures\day_clear.png" />
+    <Content Include="DynamicWeather\Textures\day_clearing.png" />
+    <Content Include="DynamicWeather\Textures\day_clouds.png" />
+    <Content Include="DynamicWeather\Textures\day_foggy.png" />
+    <Content Include="DynamicWeather\Textures\day_halloween.png" />
+    <Content Include="DynamicWeather\Textures\day_overcast.png" />
+    <Content Include="DynamicWeather\Textures\day_rain.png" />
+    <Content Include="DynamicWeather\Textures\day_smog.png" />
+    <Content Include="DynamicWeather\Textures\day_snow.png" />
+    <Content Include="DynamicWeather\Textures\day_snowlight.png" />
+    <Content Include="DynamicWeather\Textures\day_thunder.png" />
+    <Content Include="DynamicWeather\Textures\day_xmas.png" />
+    <Content Include="DynamicWeather\Textures\night_blizzard.png" />
+    <Content Include="DynamicWeather\Textures\night_clear.png" />
+    <Content Include="DynamicWeather\Textures\night_clearing.png" />
+    <Content Include="DynamicWeather\Textures\night_clouds.png" />
+    <Content Include="DynamicWeather\Textures\night_foggy.png" />
+    <Content Include="DynamicWeather\Textures\night_halloween.png" />
+    <Content Include="DynamicWeather\Textures\night_overcast.png" />
+    <Content Include="DynamicWeather\Textures\night_rain.png" />
+    <Content Include="DynamicWeather\Textures\night_smog.png" />
+    <Content Include="DynamicWeather\Textures\night_snow.png" />
+    <Content Include="DynamicWeather\Textures\night_snowlight.png" />
+    <Content Include="DynamicWeather\Textures\night_thunder.png" />
+    <Content Include="DynamicWeather\Textures\night_xmas.png" />
     <Content Include="DynamicWeather\Weathers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
