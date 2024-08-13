@@ -72,6 +72,10 @@ internal static class GameTimeImproved
         
     internal static string GetTimeString()
     {
-        return GetTime().ToString("t");
+        if (Settings.EnableMilitaryClock)
+        {
+            return GetTime().ToString("HH:mm");
+        }
+        return GetTime().ToString("hh:mm tt");
     }
 }
