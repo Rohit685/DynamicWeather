@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DynamicWeather.API;
 using DynamicWeather.Enums;
 using DynamicWeather.Helpers;
 using Rage;
@@ -88,6 +89,7 @@ namespace DynamicWeather
                 {
                     NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(NextWeather);
                     Game.LogTrivial($"Transitioned --> {NextWeather}");
+                    Events.InvokeOnWeatherChanged(WeatherList[currWeatherIndex],WeatherList[currWeatherIndex + 1]);
                     break;
                 }
             }
