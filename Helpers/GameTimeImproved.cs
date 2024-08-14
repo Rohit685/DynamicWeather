@@ -67,8 +67,14 @@ internal static class GameTimeImproved
 
     internal static bool IsNightTime()
     {
-        return hour > 18 || hour < 6;
+        return hour > 21 || hour < 6;
     }
+    
+    internal static bool IsNightTime(DateTime time)
+    {
+        return time.Hour > 21 || time.Hour < 6;
+    }
+    
         
     internal static string GetTimeString()
     {

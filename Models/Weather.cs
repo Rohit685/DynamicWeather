@@ -105,7 +105,7 @@ namespace DynamicWeather.Models
 
         internal Texture GetTexture()
         {
-            if (GameTimeImproved.IsNightTime()) return NightTexture;
+            if (GameTimeImproved.IsNightTime(WeatherTime)) return NightTexture;
             return DayTexture;
         }
     }

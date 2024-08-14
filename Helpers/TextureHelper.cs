@@ -18,7 +18,7 @@ namespace DynamicWeather.Helpers
             for (int index = 0; index < textures.Count; index++)
             {
                 Texture texture = textures[index];
-                DrawTexture(g,texture, size.Width / (textures.Count + 1) * (index + 1), size.Height / 4, 96, 96);
+                DrawTexture(g,texture, (size.Width / (textures.Count + 2) * (index + 1)), size.Height / 4, 96, 96);
             }
         }
 
@@ -41,7 +41,7 @@ namespace DynamicWeather.Helpers
             for (int index = 0; index < texts.Count; index++)
             {
                 Text text = texts[index];
-                DrawText(g, text, (size.Width / (texts.Count + 1) * (index + 1)), (size.Height / 4) - 100);
+                DrawText(g, text, (size.Width / (texts.Count + 2) * (index + 1)), (size.Height / 4) - 100);
             }
         }
         
@@ -50,7 +50,8 @@ namespace DynamicWeather.Helpers
             foreach (var texture in Directory.GetFiles(@"Plugins/DynamicWeather/Textures"))
             {
                 String filename = Path.GetFileNameWithoutExtension(texture).ToUpper();
-                if (!Enum.TryParse(filename, true, out WeatherTypesEnum type))
+                string fileEnum = filename.Substring(filename.IndexOf("_") + 1);
+                if (!Enum.TryParse(fileEnum, true, out WeatherTypesEnum type))
                 {
                     Game.LogTrivial($"Invalid texture name found in directory: {filename}");
                 }
