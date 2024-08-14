@@ -18,7 +18,7 @@ namespace DynamicWeather.Helpers
             for (int index = 0; index < textures.Count; index++)
             {
                 Texture texture = textures[index];
-                DrawTexture(g,texture, size.Width / (textures.Count + 1) * (index + 1), size.Height / 4, 96, 96);
+                DrawTexture(g,texture, (size.Width / (textures.Count + 2) * (index + 1)), size.Height / 4, 96, 96);
             }
         }
 
@@ -41,7 +41,7 @@ namespace DynamicWeather.Helpers
             for (int index = 0; index < texts.Count; index++)
             {
                 Text text = texts[index];
-                DrawText(g, text, (size.Width / (texts.Count + 1) * (index + 1)) + 30, (size.Height / 4) - 50);
+                DrawText(g, text, (size.Width / (texts.Count + 2) * (index + 1)), (size.Height / 4) - 100);
             }
         }
         
@@ -50,20 +50,43 @@ namespace DynamicWeather.Helpers
             foreach (var texture in Directory.GetFiles(@"Plugins/DynamicWeather/Textures"))
             {
                 String filename = Path.GetFileNameWithoutExtension(texture).ToUpper();
-                if (!Enum.TryParse(filename, true, out WeatherTypesEnum type))
+                string fileEnum = filename.Substring(filename.IndexOf("_") + 1);
+                if (!Enum.TryParse(fileEnum, true, out WeatherTypesEnum type))
                 {
                     Game.LogTrivial($"Invalid texture name found in directory: {filename}");
                 }
-                if (Weathers.WeatherData[type].Texture != null)
+                if ((Weathers.WeatherData[type].DayTexture != null) || (Weathers.WeatherData[type].NightTexture != null))
                 {
                     Game.LogTrivial($"Duplicate texture types found in directory: {filename}");
                 }
-                Weathers.WeatherData[type].Texture = Game.CreateTextureFromFile(texture);
-                if (type == WeatherTypesEnum.ExtraSunny)
+                Game.LogTrivial($"Associated {filename} with {Weathers.WeatherData[type].WeatherName}");
+                if (filename.Contains("DAY"))
                 {
-                    Weathers.WeatherData[WeatherTypesEnum.Clear].Texture = Game.CreateTextureFromFile(texture);
-                    Weathers.WeatherData[WeatherTypesEnum.Neutral].Texture = Game.CreateTextureFromFile(texture);
-    
+                    Weathers.WeatherData[type].DayTexture = Game.CreateTextureFromFile(texture);
+                    if (type == WeatherTypesEnum.Clear)
+                    {
+                        Weathers.WeatherData[WeatherTypesEnum.ExtraSunny].DayTexture = Game.CreateTextureFromFile(texture);
+                        Weathers.WeatherData[WeatherTypesEnum.Neutral].DayTexture = Game.CreateTextureFromFile(texture);
+                    }
+                }
+                else if(filename.Contains("NIGHT"))
+                {
+                    Weathers.WeatherData[type].NightTexture = Game.CreateTextureFromFile(texture);
+                    if (type == WeatherTypesEnum.Clear)
+                    {
+                        Weathers.WeatherData[WeatherTypesEnum.ExtraSunny].NightTexture = Game.CreateTextureFromFile(texture);
+                        Weathers.WeatherData[WeatherTypesEnum.Neutral].NightTexture = Game.CreateTextureFromFile(texture);
+                    }
+                }
+            }
+
+            foreach (var weather in Weathers.WeatherData.Values)
+            {
+                if (weather.DayTexture == null || weather.NightTexture == null)
+                {
+                    Game.LogTrivial($"Both day and night textures were not found in the directory for {weather.WeatherName}");
+                    Game.DisplayNotification("new_editor", "warningtriangle", "ERROR", "~y~Dynamic Weather",
+                        $"Both day and night textures were not found in the directory for {weather.WeatherName}");
                 }
             }
         }
