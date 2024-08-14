@@ -9,6 +9,9 @@ internal static class Settings
     internal static Keys GlobalModifierKey = Keys.None;
     internal static Keys ShowForecastKey = Keys.Oemtilde;
     internal static int TimeInterval = 3;
+    internal static bool EnableAlwaysOnUI = true;
+    internal static bool EnableMilitaryClock = false;
+    
     
     
     internal static void ReadSettings()
@@ -19,5 +22,7 @@ internal static class Settings
         GlobalModifierKey = iniFile.ReadEnum("General", "GlobalModifierKey", GlobalModifierKey);    
         ShowForecastKey = iniFile.ReadEnum("General", "ShowForecastKey", ShowForecastKey);
         TimeInterval = iniFile.ReadInt32("General", "TimeInterval", TimeInterval);
+        EnableAlwaysOnUI = iniFile.ReadBoolean("General", "EnableAlwaysOnUI", EnableAlwaysOnUI);
+        EnableMilitaryClock = iniFile.ReadBoolean("General", "EnableMilitaryClock", EnableMilitaryClock);
     }
  }
