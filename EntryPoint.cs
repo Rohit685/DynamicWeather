@@ -25,7 +25,7 @@ namespace DynamicWeather
             GameFiber.StartNew(GameTimeImproved.Process);
             GameFiber.WaitUntil(() => GameTimeImproved.TimeInit);
             currentForecast = new Forecast(Settings.TimeInterval);
-            GameFiber.StartNew(currentForecast.Process);
+            currentForecast.Process();
             Start();
             while (true)
             {

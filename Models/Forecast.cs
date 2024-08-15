@@ -9,6 +9,7 @@ using DynamicWeather.API;
 using DynamicWeather.Enums;
 using DynamicWeather.Helpers;
 using Rage;
+using Rage.Attributes;
 using Rage.Native;
 
 namespace DynamicWeather
@@ -16,11 +17,12 @@ namespace DynamicWeather
     internal class Forecast
     {
         internal List<Weather> WeatherList = new List<Weather>();
-        private int currWeatherIndex;
+        internal int currWeatherIndex { get; private set; }
         private List<Text> TextList;
         private List<Texture> TexturesList;
         private double timeInterval;
         internal static Random random = new Random(DateTime.Today.Millisecond);
+        private bool ForecastRunning;
 
         private static WeatherTypesEnum[] stages =
         {
@@ -41,43 +43,44 @@ namespace DynamicWeather
 
         internal Forecast(int interval)
         {
-            WeatherList = CreateForecast();
-            currWeatherIndex = 0;
             timeInterval = interval;
             TextList = new List<Text>();
             TexturesList = new List<Texture>();
-            GenerateForecastTextures();
+            currWeatherIndex = 0;
+            WeatherList = CreateForecast(); 
+            ForecastRunning = true;
         }
 
         internal void Process()
         {
-            DateTime lastTransitionTime = GameTimeImproved.GetTime();
-            NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(WeatherList[currWeatherIndex].WeatherName);
-            while (true)
+            GameFiber.StartNew(delegate
             {
-                GameFiber.Yield();
-                DateTime currTime = GameTimeImproved.GetTime();
-                TimeSpan elapsedTime = currTime - lastTransitionTime;
-
-                if (elapsedTime.TotalMinutes >= ((timeInterval - 0.1) * 60))
+                DateTime lastTransitionTime = GameTimeImproved.GetTime();
+                NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(WeatherList[currWeatherIndex].WeatherName);
+                while (true && ForecastRunning)
                 {
-                    TransitionWeather(WeatherList[currWeatherIndex].WeatherName,
-                        WeatherList[currWeatherIndex + 1].WeatherName);
-                    Game.LogTrivial(
-                        $"Starting the transition from {WeatherList[currWeatherIndex].WeatherName} --> {WeatherList[currWeatherIndex + 1].WeatherName}");
-                    lastTransitionTime = GameTimeImproved.GetTime();
-                    currWeatherIndex++;
-                    if (currWeatherIndex >= WeatherList.Count - 1)
+                    GameFiber.Yield();
+                    DateTime currTime = GameTimeImproved.GetTime();
+                    TimeSpan elapsedTime = currTime - lastTransitionTime;
+
+                    if (elapsedTime.TotalMinutes >= ((timeInterval - 0.1) * 60))
                     {
-                        currWeatherIndex = 0;
-                        WeatherList = CreateForecast(WeatherList[currWeatherIndex + 1].WeatherName);
-                        GenerateForecastTextures();
+                        TransitionWeather(WeatherList[currWeatherIndex].WeatherName,
+                            WeatherList[currWeatherIndex + 1].WeatherName);
+                        Game.LogTrivial(
+                            $"Starting the transition from {WeatherList[currWeatherIndex].WeatherName} --> {WeatherList[currWeatherIndex + 1].WeatherName}");
+                        lastTransitionTime = GameTimeImproved.GetTime();
+                        currWeatherIndex++;
+                        if (currWeatherIndex >= WeatherList.Count - 1)
+                        {
+                            currWeatherIndex = 0;
+                            WeatherList = CreateForecast(WeatherList[currWeatherIndex + 1].WeatherName);
+                        }
                     }
+
+                    GameFiber.Sleep(5000);
                 }
-
-                GameFiber.Sleep(5000);
-            }
-
+            });
         }
 
         internal void TransitionWeather(string CurrentWeather, string NextWeather)
@@ -131,7 +134,7 @@ namespace DynamicWeather
                 weatherList.Add(weather);
                 index++;
             }
-
+            GenerateForecastTextures();
             Game.LogTrivial($"New forecast generated! --> {String.Join(", ", weatherList.Select(w => w.WeatherName))}");
             return weatherList;
         }
@@ -178,6 +181,41 @@ namespace DynamicWeather
                 $"{WeatherList[currWeatherIndex].Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{GameTimeImproved.GetTimeString()}";
             TextureHelper.DrawText(g, new Text(f, 37, Color.White), size.Width - 200, size.Height / 5);
             TextureHelper.DrawTexture(g, WeatherList[currWeatherIndex].GetTexture(), size.Width - 200, size.Height / 10, 96, 96);
+        }
+
+        [ConsoleCommand]
+        internal void PauseForecast()
+        {
+            ForecastRunning = false;
+            Game.DisplayNotification("char_ls_tourist_board", "char_ls_tourist_board", "~b~ Weather Notification",
+                "Dynamic Weather", "All weather systems have went down. The forecast and current weather display are now inactive.");
+            EntryPoint.Stop();
+        }
+        
+        [ConsoleCommand]
+        internal void ResumeForecast()
+        {
+            ForecastRunning = true;
+            Game.DisplayNotification("char_ls_tourist_board", "char_ls_tourist_board", "~b~ Weather Notification",
+                "Dynamic Weather", "All weather systems are back up. The forecast and current weather display are now active.");
+            RegenerateForecast();
+            Process();
+            EntryPoint.Start();
+        }
+
+        [ConsoleCommand]
+        internal void RegenerateForecast()
+        {
+            var e = (WeatherTypesEnum) NativeFunction.Natives.GET_PREV_WEATHER_TYPE_HASH_NAME<int>();
+            if (Enum.IsDefined(typeof(WeatherTypesEnum), e))
+            {
+                WeatherList = CreateForecast(e.ToString().ToUpper());
+            }
+            else
+            {
+                Game.LogTrivial("Something special was going on.");
+                WeatherList = CreateForecast();
+            }
         }
     }
 }
