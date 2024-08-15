@@ -62,7 +62,11 @@ namespace DynamicWeather
                     GameFiber.Yield();
                     DateTime currTime = GameTimeImproved.GetTime();
                     TimeSpan elapsedTime = currTime - lastTransitionTime;
-
+                    var e = (WeatherTypesEnum) NativeFunction.Natives.GET_PREV_WEATHER_TYPE_HASH_NAME<int>();
+                    if (Enum.IsDefined(typeof(WeatherTypesEnum), e) && (e != WeatherList[currWeatherIndex].WeatherType))
+                    {
+                        NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(WeatherList[currWeatherIndex].WeatherName);
+                    }
                     if (elapsedTime.TotalMinutes >= ((timeInterval - 0.1) * 60))
                     {
                         TransitionWeather(WeatherList[currWeatherIndex].WeatherName,
