@@ -47,7 +47,7 @@ namespace DynamicWeather
             TextList = new List<Text>();
             TexturesList = new List<Texture>();
             currWeatherIndex = 0;
-            WeatherList = CreateForecast(); 
+            CreateForecast(); 
             ForecastRunning = true;
         }
 
@@ -55,34 +55,30 @@ namespace DynamicWeather
         {
             GameFiber.StartNew(delegate
             {
-                DateTime lastTransitionTime = GameTimeImproved.GetTime();
                 NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(WeatherList[currWeatherIndex].WeatherName);
                 while (true && ForecastRunning)
                 {
                     GameFiber.Yield();
                     DateTime currTime = GameTimeImproved.GetTime();
-                    TimeSpan elapsedTime = currTime - lastTransitionTime;
                     var e = (WeatherTypesEnum) NativeFunction.Natives.GET_PREV_WEATHER_TYPE_HASH_NAME<int>();
                     if (Enum.IsDefined(typeof(WeatherTypesEnum), e) && (e != WeatherList[currWeatherIndex].WeatherType))
                     {
                         NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(WeatherList[currWeatherIndex].WeatherName);
                     }
-                    if (elapsedTime.TotalMinutes >= ((timeInterval - 0.1) * 60))
+                    if (currTime > WeatherList[currWeatherIndex + 1].WeatherTime)
                     {
                         TransitionWeather(WeatherList[currWeatherIndex].WeatherName,
                             WeatherList[currWeatherIndex + 1].WeatherName);
                         Game.LogTrivial(
                             $"Starting the transition from {WeatherList[currWeatherIndex].WeatherName} --> {WeatherList[currWeatherIndex + 1].WeatherName}");
-                        lastTransitionTime = GameTimeImproved.GetTime();
                         currWeatherIndex++;
+                        
                         if (currWeatherIndex >= WeatherList.Count - 1)
                         {
+                            CreateForecast(WeatherList[currWeatherIndex].WeatherName);
                             currWeatherIndex = 0;
-                            WeatherList = CreateForecast(WeatherList[currWeatherIndex + 1].WeatherName);
                         }
                     }
-
-                    GameFiber.Sleep(5000);
                 }
             });
         }
@@ -93,7 +89,7 @@ namespace DynamicWeather
             while (true)
             {
                 GameFiber.Yield();
-                percentChanged += 0.01f;
+                percentChanged += 0.001f;
                 NativeFunction.Natives.x578C752848ECFA0C(Game.GetHashKey(CurrentWeather),
                     Game.GetHashKey(NextWeather), percentChanged);
                 if (percentChanged >= 0.99)
@@ -106,11 +102,12 @@ namespace DynamicWeather
             }
         }
 
-        internal List<Weather> CreateForecast(string startingWeatherName = "")
+        internal void CreateForecast(string startingWeatherName = "")
         {
             List<Weather> weatherList = new List<Weather>();
             DateTime time = GameTimeImproved.GetTime();
             int index = random.Next(0, 5);
+            Game.LogTrivial(startingWeatherName);
             if (startingWeatherName.Length == 0)
             {
                 Weather weather = Weathers.WeatherData[stages[index]].Clone();
@@ -122,7 +119,7 @@ namespace DynamicWeather
             {
                 Enum.TryParse(startingWeatherName, true, out WeatherTypesEnum type);
                 Weather weather = Weathers.WeatherData[type].Clone();
-                time = UpdateTime(weather, time);
+                weather.WeatherTime = time;
                 weatherList.Add(weather);
             }
 
@@ -138,9 +135,9 @@ namespace DynamicWeather
                 weatherList.Add(weather);
                 index++;
             }
+            WeatherList = weatherList;
             GenerateForecastTextures();
             Game.LogTrivial($"New forecast generated! --> {String.Join(", ", weatherList.Select(w => w.WeatherName))}");
-            return weatherList;
         }
 
         internal static DateTime UpdateTime(Weather weather, DateTime time)
@@ -187,7 +184,6 @@ namespace DynamicWeather
             TextureHelper.DrawTexture(g, WeatherList[currWeatherIndex].GetTexture(), size.Width - 200, size.Height / 10, 96, 96);
         }
 
-        [ConsoleCommand]
         internal void PauseForecast()
         {
             ForecastRunning = false;
@@ -196,7 +192,6 @@ namespace DynamicWeather
             EntryPoint.Stop();
         }
         
-        [ConsoleCommand]
         internal void ResumeForecast()
         {
             ForecastRunning = true;
@@ -207,18 +202,17 @@ namespace DynamicWeather
             EntryPoint.Start();
         }
 
-        [ConsoleCommand]
         internal void RegenerateForecast()
         {
             var e = (WeatherTypesEnum) NativeFunction.Natives.GET_PREV_WEATHER_TYPE_HASH_NAME<int>();
             if (Enum.IsDefined(typeof(WeatherTypesEnum), e))
             {
-                WeatherList = CreateForecast(e.ToString().ToUpper());
+                CreateForecast(e.ToString().ToUpper());
             }
             else
             {
                 Game.LogTrivial("Something special was going on.");
-                WeatherList = CreateForecast();
+                CreateForecast();
             }
         }
     }
