@@ -6,6 +6,7 @@ using DynamicWeather.Enums;
 using DynamicWeather.Helpers;
 using DynamicWeather.Models;
 using Rage;
+using Rage.Attributes;
 using Rage.Exceptions;
 using Rage.Native;
 
@@ -16,6 +17,7 @@ namespace DynamicWeather
     {
         internal static bool drawing = false;
         internal static Forecast currentForecast = null;
+
         internal static void Main()
         {
             Weathers.DeserializeAndValidateXML();
@@ -25,13 +27,14 @@ namespace DynamicWeather
             GameFiber.StartNew(GameTimeImproved.Process);
             GameFiber.WaitUntil(() => GameTimeImproved.TimeInit);
             currentForecast = new Forecast(Settings.TimeInterval);
-            GameFiber.StartNew(currentForecast.Process);
+            currentForecast.Process();
             Start();
+            Game.AddConsoleCommands();
             while (true)
             {
                 GameFiber.Yield();
                 NativeFunction.Natives.DISABLE_CONTROL_ACTION(2, 243, false);
-                if (IsKeyDownRightNow()) 
+                if (IsKeyDownRightNow())
                 {
                     drawing = true;
                 }
@@ -42,17 +45,17 @@ namespace DynamicWeather
 
             }
         }
- 
+
         internal static void Start()
         {
             Game.RawFrameRender += FrameRender;
         }
-        
+
         internal static void Stop()
         {
             Game.RawFrameRender -= FrameRender;
         }
-        
+
         private static void FrameRender(object sender, GraphicsEventArgs e)
         {
             if (drawing)
@@ -73,10 +76,28 @@ namespace DynamicWeather
                 : (Game.IsKeyDownRightNow(Settings.GlobalModifierKey) &&
                    Game.IsKeyDownRightNow(Settings.ShowForecastKey));
         }
-        
+
         internal static void OnUnload(bool Exit)
         {
             Stop();
         }
-    }
+
+        [ConsoleCommand]
+        private static void PauseForecast()
+        {
+            currentForecast.PauseForecast();
+        }
+
+        [ConsoleCommand]
+        private static void ResumeForecast()
+        {
+            currentForecast.ResumeForecast();
+        }
+
+        [ConsoleCommand]
+        private static void RegenerateForecast()
+        {
+            currentForecast.RegenerateForecast();
+        }
+}
 }   
