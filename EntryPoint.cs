@@ -29,6 +29,7 @@ namespace DynamicWeather
             currentForecast = new Forecast(Settings.TimeInterval);
             currentForecast.Process();
             Start();
+            Game.AddConsoleCommands();
             while (true)
             {
                 GameFiber.Yield();
