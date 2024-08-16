@@ -13,7 +13,7 @@ namespace DynamicWeather.Models
     public class Weather
     {
         [XmlIgnore]
-        public WeatherTypesEnum WeatherTypesEnum { get; set; }
+        public WeatherTypesEnum WeatherType { get; set; }
         
         [XmlAttribute]
         public string WeatherName { get; set; }
@@ -36,9 +36,9 @@ namespace DynamicWeather.Models
         [XmlIgnore]
         internal DateTime WeatherTime { get; set; }
 
-        internal Weather(WeatherTypesEnum weatherTypesEnum, string weatherName, int temperature, int minTemperature, int maxTemperature)
+        internal Weather(WeatherTypesEnum weatherType, string weatherName, int temperature, int minTemperature, int maxTemperature)
         {
-            WeatherTypesEnum = weatherTypesEnum;
+            WeatherType = weatherType;
             WeatherName = weatherName.ToUpper();
             Temperature = temperature;
             MinTemperature = minTemperature;
@@ -96,7 +96,7 @@ namespace DynamicWeather.Models
 
         public Weather Clone()
         {
-            Weather returnVal = new Weather(this.WeatherTypesEnum, this.WeatherName, this.Temperature,
+            Weather returnVal = new Weather(this.WeatherType, this.WeatherName, this.Temperature,
                 this.MinTemperature, this.MaxTemperature);
             returnVal.DayTexture = this.DayTexture;
             returnVal.NightTexture = this.NightTexture;
