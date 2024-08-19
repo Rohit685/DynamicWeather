@@ -11,7 +11,9 @@ internal static class Settings
     internal static int TimeInterval = 3;
     internal static bool EnableAlwaysOnUI = true;
     internal static bool EnableMilitaryClock = false;
-    
+    internal static string APIKey = "";
+    internal static string Location = "";
+    internal static bool RealLifeWeatherSyncEnabled = false;
     
     
     internal static void ReadSettings()
@@ -24,5 +26,8 @@ internal static class Settings
         TimeInterval = iniFile.ReadInt32("General", "TimeInterval", TimeInterval);
         EnableAlwaysOnUI = iniFile.ReadBoolean("General", "EnableAlwaysOnUI", EnableAlwaysOnUI);
         EnableMilitaryClock = iniFile.ReadBoolean("General", "EnableMilitaryClock", EnableMilitaryClock);
+        RealLifeWeatherSyncEnabled = iniFile.ReadBoolean("WeatherSync", "RealLifeWeatherSyncEnabled", RealLifeWeatherSyncEnabled);
+        APIKey = iniFile.ReadString("WeatherSync", "APIKey", APIKey);
+        Location = iniFile.ReadString("WeatherSync", "Location", Location);
     }
  }

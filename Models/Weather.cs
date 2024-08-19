@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -49,13 +50,12 @@ namespace DynamicWeather.Models
 
         internal int GetTemperature(Weather weather)
         {
-            Random random = new Random();
+            if (EntryPoint.isRealLifeWeatherSyncRunning) return Temperature;
             var timeOfDay = World.DateTime.TimeOfDay;
             int hour = timeOfDay.Hours;
 
             int minTemperature;
             int maxTemperature;
-
             switch (hour)
             {
                 case int h when (h >= 0 && h < 6):
@@ -89,8 +89,18 @@ namespace DynamicWeather.Models
                     break;
             }
 
-            return random.Next(minTemperature, maxTemperature);
+            return Forecast.random.Next(minTemperature, maxTemperature);
         }
+        
+        internal void Draw(Rage.Graphics g)
+        {
+            SizeF size = Game.Resolution;
+            String f =
+                $"{Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{GameTimeImproved.GetTimeString()}";
+            TextureHelper.DrawText(g, new Text(f, 37, Color.White), size.Width - 200, size.Height / 5);
+            TextureHelper.DrawTexture(g, GetTexture(), size.Width - 200, size.Height / 10, 96, 96);
+        }
+        
 
         public Weather() { }
 

@@ -17,6 +17,8 @@ namespace DynamicWeather
     {
         internal static bool drawing = false;
         internal static Forecast currentForecast = null;
+        internal static bool isRealLifeWeatherSyncRunning = false;
+        internal static Weather RealLifeWeather = null;
 
         internal static void Main()
         {
@@ -63,9 +65,14 @@ namespace DynamicWeather
                 currentForecast.DrawForecast(e.Graphics);
             }
 
-            if (Settings.EnableAlwaysOnUI)
+            if (Settings.EnableAlwaysOnUI && !isRealLifeWeatherSyncRunning)
             {
                 currentForecast.DrawCurrentWeather(e.Graphics);
+            }
+
+            if (isRealLifeWeatherSyncRunning && RealLifeWeather != null)
+            {
+                RealLifeWeather.Draw(e.Graphics);
             }
         }
 
