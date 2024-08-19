@@ -20,7 +20,6 @@ internal static class Settings
     {
         iniFile = new InitializationFile(@"Plugins/DynamicWeather/DynamicWeather.ini");
         iniFile.Create();
-
         GlobalModifierKey = iniFile.ReadEnum("General", "GlobalModifierKey", GlobalModifierKey);    
         ShowForecastKey = iniFile.ReadEnum("General", "ShowForecastKey", ShowForecastKey);
         TimeInterval = iniFile.ReadInt32("General", "TimeInterval", TimeInterval);

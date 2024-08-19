@@ -50,9 +50,8 @@ namespace DynamicWeather.Models
 
         internal int GetTemperature(Weather weather)
         {
-            if (EntryPoint.isRealLifeWeatherSyncRunning) return Temperature;
-            var timeOfDay = World.DateTime.TimeOfDay;
-            int hour = timeOfDay.Hours;
+            if (RealLifeWeatherSync.isRealLifeWeatherSyncRunning) return Temperature;
+            int hour = GameTimeImproved.hour;
 
             int minTemperature;
             int maxTemperature;

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Rage;
-using System.Text.Json;
 using DynamicWeather.Enums;
 using DynamicWeather.Models;
 
@@ -13,10 +13,10 @@ namespace DynamicWeather.Helpers;
 internal static class RealLifeWeatherSync
 {
     private static readonly string userAgent = Assembly.GetExecutingAssembly().GetName().Name + "/" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
-    private static Thread networkThread = null;
+    internal static Thread networkThread = null;
     private static bool responseReceived = false;
-    private static string endpoint =
-        $"https://api.weatherapi.com/v1/current.json?key={Settings.APIKey}&q={Settings.Location}&aqi=no";
+    internal static bool isRealLifeWeatherSyncRunning = false;
+    internal static Weather RealLifeWeather = null;
 
     private static Dictionary<int, WeatherTypesEnum> codeToEnum = new Dictionary<int, WeatherTypesEnum>()
     {
@@ -69,7 +69,7 @@ internal static class RealLifeWeatherSync
         { 1282, WeatherTypesEnum.Thunder },
     };   
 
-    internal static bool UpdateWeather()
+    internal static void UpdateWeather()
     {
         networkThread = new Thread(GetUpdatedWeather);
         networkThread.Start();
@@ -84,12 +84,15 @@ internal static class RealLifeWeatherSync
             Game.LogTrivial("Unable to retrieve real life weather. Switching to forecast.");
             Game.DisplayNotification("new_editor", "warningtriangle", "ERROR", "~y~Dynamic Weather",
                 $"Real life weather was not able to be fetched. Switching to normal forecast.");
-            EntryPoint.currentForecast = new Forecast(Settings.TimeInterval);
-            EntryPoint.currentForecast.Process();
-            return false;
+            if (EntryPoint.currentForecast == null)
+            {
+                EntryPoint.currentForecast = new Forecast(Settings.TimeInterval);
+                EntryPoint.currentForecast.Process();
+            }
+            isRealLifeWeatherSyncRunning = false;
+            return;
         }
-
-        return true;
+        isRealLifeWeatherSyncRunning = true;
     }
 
     private static void GetUpdatedWeather()
@@ -97,9 +100,11 @@ internal static class RealLifeWeatherSync
         WebClient weatherChecker = new();
         weatherChecker.Headers.Add("User-Agent", userAgent);
         string response = "";
+        string endpoint =
+            $"https://api.weatherapi.com/v1/current.json?key={Settings.APIKey}&q={Settings.Location}&aqi=no";
         try
         {
-            weatherChecker.DownloadString(endpoint);
+            response = weatherChecker.DownloadString(endpoint);
         }
         catch (WebException we)
         {
@@ -112,16 +117,15 @@ internal static class RealLifeWeatherSync
         {
             Game.LogTrivial($"{e.ToString()}");
         }
-        
-        using (JsonDocument doc = JsonDocument.Parse(response))
-        {
-            JsonElement root = doc.RootElement;
-            JsonElement current = root.GetProperty("current");
-            int temp = Weathers.usingMuricaUnits ? current.GetProperty("temp_f").GetInt32() : current.GetProperty("temp_c").GetInt32();
-            int conditionCode = current.GetProperty("condition").GetProperty("code").GetInt32();
-            EntryPoint.RealLifeWeather = Weathers.WeatherData[codeToEnum[conditionCode]].Clone();
-            EntryPoint.RealLifeWeather.Temperature = temp;
-        }
+        Game.LogTrivial(response);
+        int tempC = Int32.Parse(Regex.Match(response, @"temp_c..(\d{2})").Groups[1].Value);
+        int tempF = Int32.Parse(Regex.Match(response, @"temp_f..(\d{2})").Groups[1].Value);
+        int conditionCode = int.Parse(Regex.Match(response, @"code..(\d{4})").Groups[1].Value);
+        RealLifeWeather = Weathers.WeatherData[codeToEnum[conditionCode]].Clone();
+        RealLifeWeather.Temperature = Weathers.usingMuricaUnits ? tempF : tempC;
+        RealLifeWeather.WeatherTime = GameTimeImproved.GetTime();
+        Game.LogTrivial($"Current Temperature in {Settings.Location}: {RealLifeWeather.Temperature}");
+        Game.LogTrivial($"Current condition in {Settings.Location}: {Weathers.WeatherData[codeToEnum[conditionCode]].WeatherName}");
         responseReceived = true;
     }
     

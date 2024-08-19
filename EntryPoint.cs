@@ -17,9 +17,8 @@ namespace DynamicWeather
     {
         internal static bool drawing = false;
         internal static Forecast currentForecast = null;
-        internal static bool isRealLifeWeatherSyncRunning = false;
-        internal static Weather RealLifeWeather = null;
-
+        
+        
         internal static void Main()
         {
             Weathers.DeserializeAndValidateXML();
@@ -30,7 +29,8 @@ namespace DynamicWeather
             GameFiber.WaitUntil(() => GameTimeImproved.TimeInit);
             if (Settings.RealLifeWeatherSyncEnabled)
             {
-                isRealLifeWeatherSyncRunning = RealLifeWeatherSync.UpdateWeather();
+                GameFiber.StartNew(() => RealLifeWeatherSync.UpdateWeather());
+                GameFiber.WaitUntil(() => RealLifeWeatherSync.networkThread != null && !RealLifeWeatherSync.networkThread.IsAlive);
             }
             else
             {
@@ -67,19 +67,19 @@ namespace DynamicWeather
 
         private static void FrameRender(object sender, GraphicsEventArgs e)
         {
-            if (drawing)
+            if (drawing && !RealLifeWeatherSync.isRealLifeWeatherSyncRunning && currentForecast != null)
             {
                 currentForecast.DrawForecast(e.Graphics);
             }
 
-            if (Settings.EnableAlwaysOnUI && !isRealLifeWeatherSyncRunning)
+            if (Settings.EnableAlwaysOnUI && !RealLifeWeatherSync.isRealLifeWeatherSyncRunning && currentForecast != null)
             {
                 currentForecast.DrawCurrentWeather(e.Graphics);
             }
 
-            if (isRealLifeWeatherSyncRunning && RealLifeWeather != null)
+            if (RealLifeWeatherSync.isRealLifeWeatherSyncRunning && RealLifeWeatherSync.RealLifeWeather != null && Settings.EnableAlwaysOnUI)
             {
-                RealLifeWeather.Draw(e.Graphics);
+                RealLifeWeatherSync.RealLifeWeather.Draw(e.Graphics);
             }
         }
 
@@ -99,7 +99,7 @@ namespace DynamicWeather
         [ConsoleCommand]
         private static void PauseForecast()
         {
-            if (isRealLifeWeatherSyncRunning)
+            if (RealLifeWeatherSync.isRealLifeWeatherSyncRunning)
             {
                 Game.LogTrivial("Real life weather sync activated. Invalid command");
                 return;
@@ -110,7 +110,7 @@ namespace DynamicWeather
         [ConsoleCommand]
         private static void ResumeForecast()
         {
-            if (isRealLifeWeatherSyncRunning)
+            if (RealLifeWeatherSync.isRealLifeWeatherSyncRunning)
             {
                 Game.LogTrivial("Real life weather sync activated. Invalid command");
                 return;
@@ -121,7 +121,7 @@ namespace DynamicWeather
         [ConsoleCommand]
         private static void RegenerateForecast()
         {
-            if (isRealLifeWeatherSyncRunning)
+            if (RealLifeWeatherSync.isRealLifeWeatherSyncRunning)
             {
                 Game.LogTrivial("Real life weather sync activated. Invalid command");
                 return;
@@ -132,12 +132,32 @@ namespace DynamicWeather
         [ConsoleCommand]
         private static void RefreshWeather()
         {
-            if (!isRealLifeWeatherSyncRunning)
+            if (!RealLifeWeatherSync.isRealLifeWeatherSyncRunning)
             {
                 Game.LogTrivial("Real life weather sync deactivated. Invalid command");
                 return;
             }
             RealLifeWeatherSync.UpdateWeather();
         }
-}
+        
+        [ConsoleCommand]
+        private static void SwitchToIRLWeather()
+        {
+            RealLifeWeatherSync.UpdateWeather();
+            if (RealLifeWeatherSync.isRealLifeWeatherSyncRunning)
+            {
+                currentForecast.PauseForecast();
+                currentForecast = null;
+            }
+        }
+        
+        [ConsoleCommand]
+        private static void SwitchToForecast()
+        {
+            EntryPoint.currentForecast = new Forecast(Settings.TimeInterval);
+            EntryPoint.currentForecast.Process();
+            RealLifeWeatherSync.isRealLifeWeatherSyncRunning = false;
+            RealLifeWeatherSync.RealLifeWeather = null;
+        }
+    }
 }   
