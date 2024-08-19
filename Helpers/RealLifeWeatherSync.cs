@@ -69,7 +69,7 @@ internal static class RealLifeWeatherSync
         { 1282, WeatherTypesEnum.Thunder },
     };   
 
-    internal static void UpdateWeather()
+    internal static bool UpdateWeather()
     {
         networkThread = new Thread(GetUpdatedWeather);
         networkThread.Start();
@@ -86,7 +86,10 @@ internal static class RealLifeWeatherSync
                 $"Real life weather was not able to be fetched. Switching to normal forecast.");
             EntryPoint.currentForecast = new Forecast(Settings.TimeInterval);
             EntryPoint.currentForecast.Process();
+            return false;
         }
+
+        return true;
     }
 
     private static void GetUpdatedWeather()

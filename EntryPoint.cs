@@ -28,8 +28,15 @@ namespace DynamicWeather
             GameFiber.WaitUntil(() => !Game.IsLoading);
             GameFiber.StartNew(GameTimeImproved.Process);
             GameFiber.WaitUntil(() => GameTimeImproved.TimeInit);
-            currentForecast = new Forecast(Settings.TimeInterval);
-            currentForecast.Process();
+            if (Settings.RealLifeWeatherSyncEnabled)
+            {
+                isRealLifeWeatherSyncRunning = RealLifeWeatherSync.UpdateWeather();
+            }
+            else
+            {
+                currentForecast = new Forecast(Settings.TimeInterval);
+                currentForecast.Process();
+            }
             Start();
             Game.AddConsoleCommands();
             while (true)
@@ -92,19 +99,45 @@ namespace DynamicWeather
         [ConsoleCommand]
         private static void PauseForecast()
         {
+            if (isRealLifeWeatherSyncRunning)
+            {
+                Game.LogTrivial("Real life weather sync activated. Invalid command");
+                return;
+            }
             currentForecast.PauseForecast();
         }
 
         [ConsoleCommand]
         private static void ResumeForecast()
         {
+            if (isRealLifeWeatherSyncRunning)
+            {
+                Game.LogTrivial("Real life weather sync activated. Invalid command");
+                return;
+            }
             currentForecast.ResumeForecast();
         }
 
         [ConsoleCommand]
         private static void RegenerateForecast()
         {
+            if (isRealLifeWeatherSyncRunning)
+            {
+                Game.LogTrivial("Real life weather sync activated. Invalid command");
+                return;
+            }
             currentForecast.RegenerateForecast();
+        }
+        
+        [ConsoleCommand]
+        private static void RefreshWeather()
+        {
+            if (!isRealLifeWeatherSyncRunning)
+            {
+                Game.LogTrivial("Real life weather sync deactivated. Invalid command");
+                return;
+            }
+            RealLifeWeatherSync.UpdateWeather();
         }
 }
 }   
