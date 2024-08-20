@@ -30,6 +30,7 @@ namespace DynamicWeather
             WeatherTypesEnum.Clear,
             WeatherTypesEnum.Foggy,
             WeatherTypesEnum.Neutral,
+            WeatherTypesEnum.Smog,
             WeatherTypesEnum.Clouds,
             WeatherTypesEnum.Overcast,
             WeatherTypesEnum.Clearing,
@@ -88,7 +89,7 @@ namespace DynamicWeather
             while (true)
             {
                 GameFiber.Yield();
-                percentChanged += 0.001f;
+                percentChanged += 0.01f;
                 NativeFunction.Natives.x578C752848ECFA0C(Game.GetHashKey(CurrentWeather),
                     Game.GetHashKey(NextWeather), percentChanged);
                 if (percentChanged >= 0.99)
