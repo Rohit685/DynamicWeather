@@ -7,6 +7,7 @@ using System.Threading;
 using Rage;
 using DynamicWeather.Enums;
 using DynamicWeather.Models;
+using Rage.Native;
 
 namespace DynamicWeather.Helpers;
 
@@ -126,6 +127,7 @@ internal static class RealLifeWeatherSync
         RealLifeWeather.WeatherTime = GameTimeImproved.GetTime();
         Game.LogTrivial($"Current Temperature in {Settings.Location}: {RealLifeWeather.Temperature}");
         Game.LogTrivial($"Current condition in {Settings.Location}: {Weathers.WeatherData[codeToEnum[conditionCode]].WeatherName}");
+        NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(Weathers.WeatherData[codeToEnum[conditionCode]].WeatherName);
         responseReceived = true;
     }
     
