@@ -125,8 +125,8 @@ internal static class RealLifeWeatherSync
         RealLifeWeather = Weathers.WeatherData[codeToEnum[conditionCode]].Clone();
         RealLifeWeather.Temperature = Weathers.usingMuricaUnits ? tempF : tempC;
         RealLifeWeather.WeatherTime = GameTimeImproved.GetTime();
-        Game.LogTrivial($"Current Temperature in {Settings.Location}: {RealLifeWeather.Temperature}");
-        Game.LogTrivial($"Current condition in {Settings.Location}: {Weathers.WeatherData[codeToEnum[conditionCode]].WeatherName}");
+        Game.LogTrivial($"Current Temperature irl: {RealLifeWeather.Temperature}");
+        Game.LogTrivial($"Current condition irl: {Weathers.WeatherData[codeToEnum[conditionCode]].WeatherName}");
         NativeFunction.Natives.SET_WEATHER_TYPE_NOW_PERSIST(Weathers.WeatherData[codeToEnum[conditionCode]].WeatherName);
         responseReceived = true;
     }
