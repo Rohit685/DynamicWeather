@@ -89,7 +89,7 @@ namespace DynamicWeather
             while (true)
             {
                 GameFiber.Yield();
-                percentChanged += 0.001f;
+                percentChanged += 0.01f;
                 NativeFunction.Natives.x578C752848ECFA0C(Game.GetHashKey(CurrentWeather),
                     Game.GetHashKey(NextWeather), percentChanged);
                 if (percentChanged >= 0.99)
@@ -155,14 +155,14 @@ namespace DynamicWeather
             {
                 var weather = WeatherList[index];
                 string f =
-                    $"{weather.Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{weather.WeatherTime.ToString("t")}";
+                    $"{weather.Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{GameTimeImproved.GetTimeString(weather.WeatherTime)}";
                 Text weatherText = new Text(f, 40, Color.White);
                 TextList.Add(weatherText);
                 TexturesList.Add(weather.GetTexture());
             }
 
-            Game.DisplayNotification("char_ls_tourist_board", "char_ls_tourist_board", "~b~ Weather Notification",
-                "Dynamic Weather", "Los Santos Transit has updated its forecast.");
+            Game.DisplayNotification("dw_graphics", "weazel_news_weather", "~b~ Weather Notification",
+                "Dynamic Weather", "Weazel News Weather has updated its forecast.");
         }
 
         internal void DrawForecast(Rage.Graphics g)
@@ -177,17 +177,13 @@ namespace DynamicWeather
 
         internal void DrawCurrentWeather(Rage.Graphics g)
         {
-            SizeF size = Game.Resolution;
-            String f =
-                $"{WeatherList[currWeatherIndex].Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{GameTimeImproved.GetTimeString()}";
-            TextureHelper.DrawText(g, new Text(f, 37, Color.White), size.Width - 200, size.Height / 5);
-            TextureHelper.DrawTexture(g, WeatherList[currWeatherIndex].GetTexture(), size.Width - 200, size.Height / 10, 96, 96);
+            WeatherList[currWeatherIndex].Draw(g);
         }
 
         internal void PauseForecast()
         {
             ForecastRunning = false;
-            Game.DisplayNotification("char_ls_tourist_board", "char_ls_tourist_board", "~b~ Weather Notification",
+            Game.DisplayNotification("dw_graphics", "weazel_news_weather", "~b~ Weather Notification",
                 "Dynamic Weather", "All weather systems have went down. The forecast and current weather display are now inactive.");
             EntryPoint.Stop();
         }
@@ -195,7 +191,7 @@ namespace DynamicWeather
         internal void ResumeForecast()
         {
             ForecastRunning = true;
-            Game.DisplayNotification("char_ls_tourist_board", "char_ls_tourist_board", "~b~ Weather Notification",
+            Game.DisplayNotification("dw_graphics", "weazel_news_weather", "~b~ Weather Notification",
                 "Dynamic Weather", "All weather systems are back up. The forecast and current weather display are now active.");
             RegenerateForecast();
             Process();
