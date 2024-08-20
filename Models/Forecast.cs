@@ -155,7 +155,7 @@ namespace DynamicWeather
             {
                 var weather = WeatherList[index];
                 string f =
-                    $"{weather.Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{weather.WeatherTime.ToString("t")}";
+                    $"{weather.Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{GameTimeImproved.GetTimeString(weather.WeatherTime)}";
                 Text weatherText = new Text(f, 40, Color.White);
                 TextList.Add(weatherText);
                 TexturesList.Add(weather.GetTexture());
