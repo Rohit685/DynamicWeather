@@ -96,8 +96,8 @@ namespace DynamicWeather.Models
             SizeF size = Game.Resolution;
             String f =
                 $"{Temperature.ToString()}° {(Weathers.usingMuricaUnits ? "F" : "C")}\n{GameTimeImproved.GetTimeString()}";
-            TextureHelper.DrawText(g, new Text(f, 37, Color.White), size.Width - 200, size.Height / 5);
-            TextureHelper.DrawTexture(g, GetTexture(), size.Width - 200, size.Height / 10, 96, 96);
+            TextureHelper.DrawText(g, new Text(f, Settings.AlwaysOnUIFontSize, Color.White), Settings.AlwaysOnUIX, Settings.AlwaysOnUIY);
+            TextureHelper.DrawTexture(g, GetTexture(), Settings.AlwaysOnUIX, Settings.AlwaysOnUIX - 100, Settings.AlwaysOnUITextureSize, Settings.AlwaysOnUITextureSize);
         }
         
 

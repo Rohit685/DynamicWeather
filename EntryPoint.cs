@@ -159,5 +159,11 @@ namespace DynamicWeather
             RealLifeWeatherSync.isRealLifeWeatherSyncRunning = false;
             RealLifeWeatherSync.RealLifeWeather = null;
         }
+
+        [ConsoleCommand]
+        private static void ReloadSettings()
+        {
+            Settings.ReadSettings();
+        }
     }
 }   
