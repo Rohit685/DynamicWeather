@@ -161,7 +161,7 @@ namespace DynamicWeather
         }
 
         [ConsoleCommand]
-        private static void ReloadSettings()
+        private static void ReloadDynamicWeatherINISettings()
         {
             Settings.ReadSettings();
         }
