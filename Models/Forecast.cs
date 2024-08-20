@@ -30,7 +30,6 @@ namespace DynamicWeather
             WeatherTypesEnum.Clear,
             WeatherTypesEnum.Foggy,
             WeatherTypesEnum.Neutral,
-            WeatherTypesEnum.Smog,
             WeatherTypesEnum.Clouds,
             WeatherTypesEnum.Overcast,
             WeatherTypesEnum.Clearing,
