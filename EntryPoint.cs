@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -42,7 +42,6 @@ namespace DynamicWeather
             while (true)
             {
                 GameFiber.Yield();
-                NativeFunction.Natives.DISABLE_CONTROL_ACTION(2, 243, false);
                 if (IsKeyDownRightNow())
                 {
                     drawing = true;
