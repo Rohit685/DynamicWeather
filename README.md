@@ -66,4 +66,4 @@ All textures can be customized. Just make sure the weather texture is optimized 
 - [@Echooo](https://www.lcpdfr.com/profile/482664-echooo/) for weather transition code
 - Krazy Manuel for the conversion chart below
 
-![https://s3-attachments.int-cdn.lcpdfrusercontent.com/monthly_2024_08/image.png.3e05b22e4206e6a380fb920ce5f0fea4.png](https://s3-attachments.int-cdn.lcpdfrusercontent.com/monthly_2024_08/image.png.3e05b22e4206e6a380fb920ce5f0fea4.png)
+![A chart with conversion from in-game time to real-life time made by Krazy Manuel.](https://s3-attachments.int-cdn.lcpdfrusercontent.com/monthly_2024_08/image.png.3e05b22e4206e6a380fb920ce5f0fea4.png)
