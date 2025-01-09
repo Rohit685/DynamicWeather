@@ -1,5 +1,4 @@
 # DynamicWeather
-**By ApparentlyRohan**
 
 This mod gives GTA its own realistic weather system! Weathers transition as the day continues in the game giving _more variety in the sky_. Read below to see what this mod has to offer.
 
